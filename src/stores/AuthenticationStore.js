@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { Dialog, Loading, Notify } from "quasar";
 import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
-import { useSupabaseStore } from "./SupabaseStore";
 
 export const useAuthenticationStore = defineStore("authentication", {
   state: () => ({
@@ -19,7 +18,6 @@ export const useAuthenticationStore = defineStore("authentication", {
 
     async signIn(email, password) {
       try {
-        const storeSupabase = useSupabaseStore();
         Loading.show({
           message: "Đang đăng nhập...",
         });
@@ -28,6 +26,8 @@ export const useAuthenticationStore = defineStore("authentication", {
           email: email.includes("@gmail.com") ? email : email + "@gmail.com",
           password,
         });
+
+        console.log(data);
 
         if (error) {
           Notify.create({
@@ -42,8 +42,7 @@ export const useAuthenticationStore = defineStore("authentication", {
         }
 
         const user = data.user;
-        await this.getUserAccountData(user.id);
-        const sessionToken = this.generateSessionToken();
+        // await this.getUserAccountData(user.id);
 
         // Start a transaction to enforce single-device login
         const { data: sessionData, error: sessionError } = await supabase.rpc(
@@ -60,39 +59,6 @@ export const useAuthenticationStore = defineStore("authentication", {
 
         // Handle post-login actions, such as redirecting the user
         if (data.session) {
-          //handle check data user day off
-          const userAuthData = storageUtil.getLocalStorageData("userAuthInfo");
-
-          const dayoffFrom = userAuthData.dayoff_from;
-          const dayoffTo = userAuthData.dayoff_to;
-
-          const currentDate = new Date();
-          const currentDateString = currentDate.toISOString().split("T")[0];
-
-          // Check if the current date is outside the range
-          const isExcluded =
-            currentDateString <= dayoffFrom || currentDateString >= dayoffTo;
-
-          if (isExcluded) {
-            Loading.hide();
-            Dialog.create({
-              title: "Thông báo",
-              message: "Nhân viên đang nghỉ phép, không thể đăng nhập!",
-              ok: true,
-              cancel: false,
-              persistent: "",
-            }).onOk(() => {
-              // this.router.push("/");
-              // setTimeout(() => {
-              //   window.location.reload();
-              // }, 300);
-            });
-
-            return;
-          }
-
-          await storeSupabase.getUserStatus();
-
           const role = storageUtil.getLocalStorageData("userAuthInfo").role;
           localStorage.setItem("access_token", data.session.access_token);
           localStorage.setItem("refresh_token", data.session.refresh_token);
@@ -115,6 +81,85 @@ export const useAuthenticationStore = defineStore("authentication", {
       } catch (err) {
         Loading.hide();
         console.error("Error when handling signIn(email, password): ", err);
+      }
+    },
+
+    async createAccount(
+      email,
+      password,
+      displayName,
+      role,
+      site = null,
+      status = null,
+      dayoffFrom = null,
+      dayoffTo = null
+    ) {
+      try {
+        Loading.show();
+        /* METHOD 1: NOTE THAT THIS METHOD USER FOR EMAIL VERTIFICATION */
+        // Step 1: Sign up the user in Supabase Authentication
+        const { data: authData, error: authError } = await supabase.auth.signUp(
+          {
+            email: email.includes("@gmail.com") ? email : email + "@gmail.com",
+            password,
+          }
+        );
+
+        if (authError) {
+          Loading.hide();
+          Notify.create({
+            message: authError.message,
+            color: "negative",
+            timeout: 2000,
+            position: "top",
+          });
+          console.error("Error creating account:", authError.message);
+          return { success: false, message: authError.message };
+        }
+
+        // Step 2: Insert user data into the `users` table
+        const { error: dbError } = await supabase.from("users").insert([
+          {
+            display_name: displayName, // Display name of the user
+            email: email.includes("@gmail.com") ? email : email + "@gmail.com",
+            user_id: authData.user.id, // User ID from Authentication
+            role, // Role of the user (e.g., admin, user)
+            provider: "email",
+            disable: false,
+          },
+        ]);
+
+        if (dbError) {
+          Notify.create({
+            message: dbError.message,
+            color: "negative",
+            timeout: 2000,
+            position: "top",
+          });
+          Loading.hide();
+          console.error(
+            "Error inserting user data into users table:",
+            dbError.message
+          );
+          return { success: false, message: dbError.message };
+        } else {
+          Loading.hide();
+          Notify.create({
+            message: "Tạo tài khoản thành công!",
+            color: "positive",
+            timeout: 2000,
+            position: "top",
+          });
+          this.isShowCreateDialog = false;
+          this.listAccount = await this.getListAccount();
+          this.newAccount = {
+            role: "user",
+          };
+        }
+      } catch (error) {
+        Loading.hide();
+        console.error("Unexpected error:", error);
+        return { success: false, message: "An unexpected error occurred." };
       }
     },
 
@@ -154,70 +199,6 @@ export const useAuthenticationStore = defineStore("authentication", {
         storageUtil.setLocalStorageData("userAuthInfo", users[0]);
       } catch (err) {
         console.error("Internal Server Error getUserAccountData(): ", err);
-      }
-    },
-
-    async validateSession() {
-      const sessionToken = localStorage.getItem("session_token");
-
-      const { data, error } = await supabase
-        .from("user_sessions")
-        .select("id")
-        .eq("session_token", sessionToken)
-        .single();
-
-      if (error || !data) {
-        setTimeout(async () => {
-          await supabase.auth.signOut();
-          localStorage.clear();
-          Dialog.create({
-            title: "Thông báo",
-            message: "Tài khoản đã được đăng nhập từ một thiết bị khác.",
-            ok: true,
-            cancel: false,
-            persistent: "",
-          }).onOk(() => {
-            this.router.push("/");
-            setTimeout(() => {
-              window.location.reload();
-            }, 300);
-          });
-        }, 300);
-
-        console.error("Session validation failed. User logged out.");
-      }
-    },
-
-    /* FUNCTIONAL */
-    async handleEmailVerification() {
-      const url = new URL(window.location.href);
-      const accessToken = url.searchParams.get("access_token");
-      const refreshToken = url.searchParams.get("refresh_token");
-      // const tokenType = url.searchParams.get("token_type");
-
-      if (accessToken && refreshToken) {
-        await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        });
-
-        this.router.push("/data");
-        // Redirect or update your app state after successful login
-      } else {
-        console.error("No tokens found in URL");
-      }
-    },
-    generateSessionToken() {
-      if (crypto.randomUUID) {
-        return crypto.randomUUID();
-      } else {
-        // Fallback: Generate a UUID manually
-        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-          (
-            c ^
-            ((crypto.getRandomValues(new Uint8Array(1))[0] & 15) >> (c / 4))
-          ).toString(16)
-        );
       }
     },
   },
