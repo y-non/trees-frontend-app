@@ -13,8 +13,44 @@ const routerName = ref("");
 const userData = storageUtil.getLocalStorageData("userAuthInfo");
 const isDark = ref(false);
 
+const listRouter = [
+  {
+    path: "/seller",
+    name: "Báo cáo",
+    icon: "eva-pie-chart-outline",
+  },
+
+  {
+    path: "/seller/order",
+    name: "Quản lý đơn hàng",
+    icon: "eva-clipboard-outline",
+  },
+
+  {
+    path: "/seller/product",
+    name: "Quản lý sản phẩm",
+    icon: "eva-shopping-bag-outline",
+  },
+
+  {
+    path: "/seller/settings",
+    name: "Thiết lập",
+    icon: "eva-settings-2-outline",
+  },
+];
+
+function handleGetRouterName(value) {
+  try {
+    const finder = listRouter.filter((item) => item.path === value)[0];
+    routerName.value = finder?.name;
+  } catch (err) {
+    console.error("Internal Server Error: ", err);
+  }
+}
+
 onMounted(async () => {
   const routerValue = router.currentRoute.value.fullPath;
+  handleGetRouterName(routerValue);
 });
 
 onBeforeMount(() => {});
@@ -25,7 +61,19 @@ onBeforeMount(() => {});
     <q-header class="q-py-sm header bg-green-8" elevated>
       <q-toolbar>
         <div class="flex justify-between full-width">
-          <div class="flex"></div>
+          <div class="flex">
+            <q-btn
+              v-if="isLogin"
+              flat
+              dense
+              round
+              icon="menu"
+              aria-label="Menu"
+              @click="drawer = !drawer"
+            >
+            </q-btn>
+            <span class="text-h5">{{ routerName }}</span>
+          </div>
 
           <div>
             <q-toggle

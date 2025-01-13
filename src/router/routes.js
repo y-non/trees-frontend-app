@@ -4,11 +4,12 @@ import SignUp from "pages/SignUp.vue";
 /* for seller */
 import SellerProduct from "src/pages/seller/SellerProduct.vue";
 import SettingPageVue from "src/pages/seller/SettingPage.vue";
+import IndexPageVue from "src/pages/IndexPage.vue";
 
 const routes = [
   {
     path: "/seller",
-    component: () => import("layouts/MainLayout.vue"),
+    component: () => import("src/layouts/SellerLayout.vue"),
     children: [
       {
         path: "product",
@@ -33,6 +34,12 @@ const routes = [
   {
     path: "/register",
     component: SignUp,
+    children: [],
+  },
+
+  {
+    path: "/",
+    component: IndexPageVue,
     children: [],
   },
 
