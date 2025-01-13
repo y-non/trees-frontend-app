@@ -170,8 +170,6 @@ export const useAuthenticationStore = defineStore("authentication", {
           .select("*")
           .eq("user_id", id);
 
-        console.log(users);
-
         storageUtil.setLocalStorageData("userAuthInfo", users[0]);
       } catch (err) {
         console.error("Internal Server Error getUserAccountData(): ", err);

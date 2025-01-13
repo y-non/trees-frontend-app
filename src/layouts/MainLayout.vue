@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeMount } from "vue";
 import { useAuthenticationStore } from "src/stores/AuthenticationStore";
 import { useRouter } from "vue-router";
 import { storageUtil } from "src/utils/storageUtil";
+import { Dark } from "quasar";
 
 const router = useRouter();
 const storeAuthentication = useAuthenticationStore();
@@ -10,6 +11,8 @@ const drawer = ref(false);
 const isLogin = storageUtil.getLocalStorageData("isLogin") || false;
 const routerName = ref("");
 const userData = storageUtil.getLocalStorageData("userAuthInfo");
+const isDark = ref(false);
+
 const listRouter = [
   {
     path: "/seller",
@@ -39,7 +42,7 @@ const listRouter = [
 function handleGetRouterName(value) {
   try {
     const finder = listRouter.filter((item) => item.path === value)[0];
-    routerName.value = finder.name;
+    routerName.value = finder?.name;
   } catch (err) {
     console.error("Internal Server Error: ", err);
   }
@@ -73,13 +76,26 @@ onBeforeMount(() => {});
           </div>
 
           <div>
+            <q-toggle
+              v-model="isDark"
+              checked-icon="eva-moon-outline"
+              color="orange"
+              unchecked-icon="eva-sun-outline"
+              @click="Dark.toggle()"
+              class="q-mr-sm"
+            />
+
             <q-chip>
               <q-avatar>
                 <img
-                  src="https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg"
+                  :src="
+                    userData?.image_url
+                      ? userData?.image_url
+                      : 'https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg'
+                  "
                 />
               </q-avatar>
-              {{ userData.display_name }}
+              <span>{{ userData?.display_name }}</span>
             </q-chip>
           </div>
         </div>
@@ -96,9 +112,7 @@ onBeforeMount(() => {});
             style="width: 100px"
           />
 
-          <span
-            class="text-center text-grey-8 text-bold"
-            style="padding: 1em 1em"
+          <span class="text-center text-bold" style="padding: 1em 1em"
             >Tiện lợi - Nhanh chóng - Tin cậy</span
           >
 
@@ -106,14 +120,17 @@ onBeforeMount(() => {});
         </div>
         <q-list padding class="menu-list">
           <div v-for="(item, index) in listRouter" :key="index">
-            <router-link :to="item.path">
+            <router-link
+              :to="item.path"
+              :class="isDark ? 'text-grey-2' : 'text-black'"
+            >
               <q-item clickable v-ripple>
                 <q-item-section avatar>
                   <q-icon class="text-primary" :name="item.icon" />
                 </q-item-section>
 
-                <q-item-section class="text-grey-9">
-                  {{ item.name }}
+                <q-item-section>
+                  <span> {{ item.name }}</span>
                 </q-item-section>
               </q-item>
             </router-link>

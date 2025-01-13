@@ -72,6 +72,7 @@ const columns = [
         style="height: calc(100vh - 200px)"
         class="my-sticky-dynamic my-sticky-header-table styled-table"
         :filter="storeSellerProduct.filterTable"
+        :loading="storeSellerProduct.loadingTable"
       >
         <template v-slot:top-right>
           <q-btn
@@ -102,7 +103,11 @@ const columns = [
         </template>
 
         <template v-slot:body="props">
-          <tr :props="props" style="width: 100%">
+          <tr
+            @dblclick="storeSellerProduct.showUpdateDialog = true"
+            :props="props"
+            style="width: 100%"
+          >
             <td>
               <q-checkbox v-model="props.selected" />
             </td>
@@ -147,9 +152,11 @@ const columns = [
 
             <td class="text-right">
               <span style="font-size: 1.1em">
-                <span style="white-space: pre-wrap" class="text-bold text-subtitle1">{{
-                  Utils.formatMoney(props.row.price)
-                }}</span>
+                <span
+                  style="white-space: pre-wrap"
+                  class="text-bold text-subtitle1"
+                  >{{ Utils.formatMoney(props.row.price) }}</span
+                >
               </span>
             </td>
           </tr>
@@ -246,7 +253,113 @@ const columns = [
                   color="red"
                   @click="storeSellerProduct.showAddDialog = false"
                 />
-                <q-btn type="submit" icon-right="add" label="Thêm mới" color="green" />
+                <q-btn
+                  type="submit"
+                  icon-right="add"
+                  label="Thêm mới"
+                  color="green"
+                />
+              </q-card-actions>
+            </q-form>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog
+        v-model="storeSellerProduct.showUpdateDialog"
+        persistent
+        style="border-radius: 8px !important"
+      >
+        <q-card
+          class="full-width q-pa-lg"
+          style="min-width: 55vw; border-radius: 8px"
+        >
+          <q-card-section>
+            <span class="text-h5">Cập nhật sản phẩm</span>
+            <q-form
+              @submit="
+                storeSellerProduct.updateProduct(
+                  storeSellerProduct.updateProduct
+                )
+              "
+              ref="form"
+            >
+              <q-file
+                clearable
+                color="orange"
+                standout
+                bottom-slots
+                v-model="storeSellerProduct.updateProduct.imageFile"
+                label="Chọn hình ảnh"
+                counter
+                dense
+              >
+                <template v-slot:prepend>
+                  <q-icon name="attach_file" />
+                </template>
+              </q-file>
+              <q-input
+                outlined
+                label="Tên sản phẩm"
+                dense
+                v-model="storeSellerProduct.updateProduct.name"
+                :rules="[(val) => !!val || 'Không được để trống']"
+              />
+              <q-input
+                outlined
+                label="Mã sản phẩm"
+                dense
+                v-model="storeSellerProduct.updateProduct.code"
+                :rules="[(val) => !!val || 'Không được để trống']"
+              />
+              <q-input
+                outlined
+                label="Mô tả hàng"
+                dense
+                v-model="storeSellerProduct.updateProduct.description"
+                :rules="[(val) => !!val || 'Không được để trống']"
+              />
+
+              <q-select
+                v-model="storeSellerProduct.updateProduct.category"
+                :options="storeSellerProduct.listCategories"
+                label="Phân loại hàng"
+                dense
+                outlined
+                option-value="id"
+                option-label="name"
+                :rules="[(val) => !!val || 'Không được để trống']"
+              />
+
+              <q-input
+                outlined
+                label="Giá"
+                dense
+                type="number"
+                v-model="storeSellerProduct.updateProduct.price"
+                :rules="[(val) => !!val || 'Không được để trống']"
+              />
+              <q-input
+                outlined
+                label="Số lượng kho"
+                dense
+                type="number"
+                v-model="storeSellerProduct.updateProduct.stock"
+                :rules="[(val) => !!val || 'Không được để trống']"
+              />
+              <q-card-actions align="right">
+                <q-btn
+                  flat
+                  label="Hủy"
+                  color="red"
+                  @click="storeSellerProduct.showUpdateDialog = false"
+                />
+                <q-btn
+                  type="submit"
+                  icon-right="add"
+                  label="Thêm mới"
+                  color="green"
+                />
               </q-card-actions>
             </q-form>
           </q-card-section>

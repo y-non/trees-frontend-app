@@ -11,8 +11,6 @@ export const useScanQrStore = defineStore("scan-qr", {
      */
     async scanData(detectedCodes) {
       try {
-        console.log(detectedCodes);
-
         Notify.create({
           message: "Đang quét mã QR..." + detectedCodes[0].rawValue,
           color: "info",

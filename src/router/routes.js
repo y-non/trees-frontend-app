@@ -3,16 +3,23 @@ import SignUp from "pages/SignUp.vue";
 
 /* for seller */
 import SellerProduct from "src/pages/seller/SellerProduct.vue";
+import SettingPageVue from "src/pages/seller/SettingPage.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/seller",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        path: "seller/product",
+        path: "product",
         component: SellerProduct,
         name: "SellerProduct",
+      },
+
+      {
+        path: "settings",
+        component: SettingPageVue,
+        name: "SettingPageVue",
       },
     ],
   },

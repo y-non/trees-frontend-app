@@ -12,6 +12,8 @@ export const useSellerProductStore = defineStore("seller-product", {
     listProduct: [],
     listCategories: [],
     showAddDialog: false,
+    showUpdateDialog: false,
+    loadingTable: false,
   }),
   actions: {
     async getInit() {
@@ -21,12 +23,14 @@ export const useSellerProductStore = defineStore("seller-product", {
 
     async getListProduct() {
       try {
+        this.loadingTable = true;
         const userData = storageUtil.getLocalStorageData("userAuthInfo");
         let { data: trees, error } = await supabase
           .from("trees")
           .select("*")
           .eq("user_id", userData.id);
 
+        this.loadingTable = false;
         return trees;
       } catch (err) {
         console.error("Internal Server Error: ", err);
