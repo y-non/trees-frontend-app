@@ -1,15 +1,31 @@
 import LoginPage from "pages/LoginPage.vue";
+import SignUp from "pages/SignUp.vue";
+
+/* for seller */
+import SellerProduct from "src/pages/seller/SellerProduct.vue";
 
 const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    // children: [{ path: "login", component: LoginPage, name: "LoginPage" }],
+    children: [
+      {
+        path: "seller/product",
+        component: SellerProduct,
+        name: "SellerProduct",
+      },
+    ],
   },
 
   {
     path: "/login",
     component: LoginPage,
+    children: [],
+  },
+
+  {
+    path: "/register",
+    component: SignUp,
     children: [],
   },
 

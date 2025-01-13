@@ -10,4 +10,82 @@
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  text-decoration: none;
+}
+
+.my-sticky-header-table thead tr:last-child th {
+  top: 48px;
+  z-index: 3;
+  z-index: 9999;
+}
+.my-sticky-header-table thead tr:first-child th {
+  top: 0;
+  z-index: 1;
+}
+.my-sticky-header-table tr:first-child th:first-child {
+  z-index: 3;
+}
+
+.my-sticky-header-table thead tr:first-child th:nth-child(2) {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+}
+
+.last-table thead th:nth-last-child(1),
+.last-table td:nth-last-child(1) {
+  position: sticky;
+  right: 0;
+  z-index: max;
+}
+
+.my-sticky-header-table td:first-child {
+  z-index: 2;
+}
+// .my-sticky-header-table td:first-child,
+// .my-sticky-header-table th:first-child {
+//   position: sticky;
+//   left: 0;
+// }
+
+.my-sticky-header-table-normal {
+  max-width: 100%;
+}
+.my-sticky-header-table-normal td:first-child {
+  // background-color: #ffffff !important;
+}
+.my-sticky-header-table-normal tr th {
+  position: sticky;
+  z-index: 2;
+  background: #fff;
+  font-weight: bold;
+  font-size: 15px;
+  height: 30px;
+}
+
+.q-table tbody td:before {
+  background: rgba(77, 179, 247, 0.157);
+}
+
+.my-sticky-header-table-normal thead tr:last-child th {
+  top: 48px;
+  z-index: 3;
+}
+.my-sticky-header-table-normal thead tr:first-child th {
+  top: 0;
+  z-index: 1;
+}
+.my-sticky-header-table-normal tr:first-child th:first-child {
+  z-index: 3;
+}
+.my-sticky-header-table-normal td:first-child {
+  z-index: 2;
+}
+
+.truncate-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
 }

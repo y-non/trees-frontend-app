@@ -9,34 +9,30 @@ const storeAuthentication = useAuthenticationStore();
 const drawer = ref(false);
 const isLogin = storageUtil.getLocalStorageData("isLogin") || false;
 const routerName = ref("");
+const userData = storageUtil.getLocalStorageData("userAuthInfo");
 const listRouter = [
   {
-    path: "/admin",
+    path: "/seller",
     name: "Báo cáo",
     icon: "eva-pie-chart-outline",
   },
-  {
-    path: "/admin/account",
-    name: "Quản lý tài khoản",
-    icon: "eva-people-outline",
-  },
 
   {
-    path: "/admin/order",
+    path: "/seller/order",
     name: "Quản lý đơn hàng",
-    icon: "eva-file-text-outline",
+    icon: "eva-clipboard-outline",
   },
 
   {
-    path: "/admin/discount",
-    name: "Quản lý mã giảm giá",
-    icon: "eva-credit-card-outline",
+    path: "/seller/product",
+    name: "Quản lý sản phẩm",
+    icon: "eva-shopping-bag-outline",
   },
 
   {
-    path: "/admin/giftcard",
-    name: "Quản lý mã quà tặng",
-    icon: "eva-gift-outline",
+    path: "/seller/settings",
+    name: "Thiết lập",
+    icon: "eva-settings-2-outline",
   },
 ];
 
@@ -50,16 +46,8 @@ function handleGetRouterName(value) {
 }
 
 onMounted(async () => {
-  // isShowLogoutButton.value = localStorage.getItem("isLogin") || false;
-  // role.value = storageUtil.getLocalStorageData("userAuthInfo")?.role;
-  // if (isLogin && role.value === "admin") {
-  //   router.push("/admin");
-  //   handleGetRouterName(router.currentRoute.value.fullPath);
-  // } else if (isLogin && role.value !== "admin") {
-  //   router.push("/data");
-  // } else {
-  //   router.push("/");
-  // }
+  const routerValue = router.currentRoute.value.fullPath;
+  handleGetRouterName(routerValue);
 });
 
 onBeforeMount(() => {});
@@ -67,30 +55,55 @@ onBeforeMount(() => {});
 
 <template>
   <q-layout view="lHh Lpr lFf">
-    <!-- <q-header class="q-py-sm header" elevated>
+    <q-header class="q-py-sm header bg-green-8" elevated>
       <q-toolbar>
-        <q-btn
-          v-if="isLogin"
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="drawer = !drawer"
-        >
-        </q-btn
-      ></q-toolbar>
-    </q-header> -->
-    <q-parallax :height="200" :speed="0.5">
-      <template v-slot:media>
-        <img src="../assets/images/bg-header.png" />
-      </template>
+        <div class="flex justify-between full-width">
+          <div class="flex">
+            <q-btn
+              v-if="isLogin"
+              flat
+              dense
+              round
+              icon="menu"
+              aria-label="Menu"
+              @click="drawer = !drawer"
+            >
+            </q-btn>
+            <span class="text-h5">{{ routerName }}</span>
+          </div>
 
-      <h1 class="text-white"></h1>
-    </q-parallax>
+          <div>
+            <q-chip>
+              <q-avatar>
+                <img
+                  src="https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg"
+                />
+              </q-avatar>
+              {{ userData.display_name }}
+            </q-chip>
+          </div>
+        </div>
+      </q-toolbar>
+    </q-header>
 
-    <q-drawer v-model="drawer" :width="200" :breakpoint="500">
+    <q-drawer show-if-above v-model="drawer" :width="200" :breakpoint="500">
       <q-scroll-area class="fit">
+        <div class="logo-container flex flex-center q-py-md">
+          <img
+            src="../assets/images/logo-full.png"
+            alt="Logo"
+            class="logo"
+            style="width: 100px"
+          />
+
+          <span
+            class="text-center text-grey-8 text-bold"
+            style="padding: 1em 1em"
+            >Tiện lợi - Nhanh chóng - Tin cậy</span
+          >
+
+          Hotline: 19008569
+        </div>
         <q-list padding class="menu-list">
           <div v-for="(item, index) in listRouter" :key="index">
             <router-link :to="item.path">
@@ -127,13 +140,4 @@ onBeforeMount(() => {});
 * {
   text-decoration: none;
 }
-
-// .header {
-//   background-image: url("../assets/images/bg-header.png");
-//   height: 20vh;
-//   background-position: center;
-//   background-repeat: no-repeat;
-//   background-size: cover;
-//   background-color: rgba(255, 255, 255, 0.7);
-// }
 </style>

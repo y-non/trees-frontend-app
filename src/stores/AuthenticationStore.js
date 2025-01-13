@@ -27,8 +27,6 @@ export const useAuthenticationStore = defineStore("authentication", {
           password,
         });
 
-        console.log(data);
-
         if (error) {
           Notify.create({
             message: error.message,
@@ -42,20 +40,7 @@ export const useAuthenticationStore = defineStore("authentication", {
         }
 
         const user = data.user;
-        // await this.getUserAccountData(user.id);
-
-        // Start a transaction to enforce single-device login
-        const { data: sessionData, error: sessionError } = await supabase.rpc(
-          "manage_user_sessions",
-          {
-            user_id: user.id,
-            session_token: sessionToken,
-          }
-        );
-
-        if (sessionError) throw sessionError;
-
-        localStorage.setItem("session_token", sessionToken);
+        await this.getUserAccountData(user.id);
 
         // Handle post-login actions, such as redirecting the user
         if (data.session) {
@@ -70,13 +55,16 @@ export const useAuthenticationStore = defineStore("authentication", {
             this.router.push("/admin");
             Loading.hide();
           } else {
-            this.router.push("/data");
+            this.router.push("/seller/product");
             Loading.hide();
           }
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 200);
+          Notify.create({
+            message: "Đăng nhập thành công!",
+            color: "positive",
+            timeout: 2000,
+            position: "top",
+          });
         }
       } catch (err) {
         Loading.hide();
@@ -84,16 +72,7 @@ export const useAuthenticationStore = defineStore("authentication", {
       }
     },
 
-    async createAccount(
-      email,
-      password,
-      displayName,
-      role,
-      site = null,
-      status = null,
-      dayoffFrom = null,
-      dayoffTo = null
-    ) {
+    async createAccount(email, password, displayName, role = "user") {
       try {
         Loading.show();
         /* METHOD 1: NOTE THAT THIS METHOD USER FOR EMAIL VERTIFICATION */
@@ -150,11 +129,7 @@ export const useAuthenticationStore = defineStore("authentication", {
             timeout: 2000,
             position: "top",
           });
-          this.isShowCreateDialog = false;
-          this.listAccount = await this.getListAccount();
-          this.newAccount = {
-            role: "user",
-          };
+          this.router.push("/login");
         }
       } catch (error) {
         Loading.hide();
@@ -172,7 +147,7 @@ export const useAuthenticationStore = defineStore("authentication", {
           cancel: true,
         }).onOk(async () => {
           localStorage.clear();
-          this.router.push("/");
+          this.router.push("/login");
 
           const { error } = await supabase.auth.signOut();
           if (error) {
@@ -190,11 +165,12 @@ export const useAuthenticationStore = defineStore("authentication", {
 
     async getUserAccountData(id) {
       try {
-        console.log(id);
         let { data: users, error } = await supabase
           .from("users")
           .select("*")
           .eq("user_id", id);
+
+        console.log(users);
 
         storageUtil.setLocalStorageData("userAuthInfo", users[0]);
       } catch (err) {

@@ -6,34 +6,56 @@ import { useAuthenticationStore } from "src/stores/AuthenticationStore";
 const router = useRouter();
 const storeAuthentication = useAuthenticationStore();
 
-const rememberMe = ref(false);
-
-// Password visibility toggle
 const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 // Methods
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
+
+const toggleConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value;
+};
 </script>
 
 <template>
-  <div class="login-page">
-    <div class="login-container">
-      <div class="logo-container">
-        <img src="../assets/images/logo-full.png" alt="Logo" class="logo" />
+  <div class="signup-page">
+    <div class="signup-container">
+      <div class="flex column">
+        <!-- <q-btn color="primary" icon="eva-arrow-back-outline" label="OK" @click="onClick" /> -->
+        <router-link to="/login" class="flex justify-start">
+          <q-icon
+            name="eva-arrow-back-outline"
+            size="md"
+            color="grey"
+            class="cursor-pointer"
+          />
+        </router-link>
+        <div class="logo-container">
+          <img src="../assets/images/logo-full.png" alt="Logo" class="logo" />
+        </div>
       </div>
-      <div class="login-form">
-        <h2 class="title text-uppercase">Đăng Nhập</h2>
+      <div class="signup-form">
+        <!-- <span class="title text-uppercase">Đăng Ký</span> -->
         <q-form
           @submit="
-            storeAuthentication.signIn(
+            storeAuthentication.createAccount(
               storeAuthentication.email,
-              storeAuthentication.password
+              storeAuthentication.password,
+              storeAuthentication.name
             )
           "
           class="form"
         >
+          <q-input
+            outlined
+            v-model="storeAuthentication.name"
+            label="Tên của bạn"
+            required
+            :rules="[(val) => !!val || 'Không được để trống']"
+          />
+
           <q-input
             outlined
             v-model="storeAuthentication.email"
@@ -65,33 +87,41 @@ const togglePassword = () => {
               />
             </template>
           </q-input>
+
+          <q-input
+            outlined
+            v-model="storeAuthentication.confirmPassword"
+            label="Xác nhận mật khẩu"
+            :type="showConfirmPassword ? 'text' : 'password'"
+            :rules="[
+              (val) => !!val || 'Không được để rỗng',
+              (val) =>
+                val === storeAuthentication.password || 'Mật khẩu không khớp',
+            ]"
+            required
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="showConfirmPassword ? 'visibility' : 'visibility_off'"
+                class="cursor-pointer"
+                @click="toggleConfirmPassword"
+              />
+            </template>
+          </q-input>
+
           <q-btn
             type="submit"
-            label="Đăng Nhập"
+            label="Đăng Ký"
             color="green-8"
             class="q-my-md q-px-lg q-py-sm"
             unelevated
             block
             style="border-radius: 10px"
           />
-          <div class="form-options">
-            <q-checkbox
-              v-model="rememberMe"
-              label="Ghi nhớ mật khẩu"
-              size="sm"
-            />
-            <!-- <q-btn
-              flat
-              label="Quên mật khẩu?"
-              size="sm"
-              class="forgot-password"
-            /> -->
-            <span>Quên mật khẩu?</span>
-          </div>
         </q-form>
-        <p class="register">
-          Bạn chưa có tài khoản?
-          <router-link to="/register">Đăng ký</router-link>
+        <p class="login">
+          Bạn đã có tài khoản?
+          <router-link to="/login">Đăng nhập</router-link>
         </p>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -106,7 +136,7 @@ const togglePassword = () => {
 </template>
 
 <style lang="scss" scoped>
-.login-page {
+.signup-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,7 +144,7 @@ const togglePassword = () => {
   height: 100vh;
 }
 
-.login-container {
+.signup-container {
   background: white;
   padding: 2rem;
   border-radius: 8px;
@@ -122,7 +152,7 @@ const togglePassword = () => {
   text-align: center;
   width: 90%;
   max-width: 500px;
-  max-height: 700px;
+  max-height: 800px;
 }
 
 .logo-container {
@@ -143,26 +173,7 @@ const togglePassword = () => {
   margin-bottom: 1rem;
 }
 
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.divider {
-  margin: 1rem 0;
-  text-align: center;
-  color: #aaa;
-}
-
-.social-login {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.register {
+.login {
   font-size: 0.9rem;
   margin-top: 1rem;
 }
