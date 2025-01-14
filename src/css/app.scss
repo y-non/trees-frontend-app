@@ -89,3 +89,12 @@
   display: block;
   max-width: 100%;
 }
+
+::selection {
+  background-color: #77b254;
+  color: #fff;
+}
+
+img {
+  user-select: none;
+}

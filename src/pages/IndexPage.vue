@@ -1,39 +1,121 @@
-<script setup></script>
+<script setup>
+import { onMounted } from "vue";
+import { ref } from "vue";
+import { useIndexStore } from "src/stores/IndexStore";
+import { Utils } from "src/utils/Utils";
+
+const slide = ref("first");
+
+const storeIndex = useIndexStore();
+
+onMounted(async () => {
+  await storeIndex.getInit();
+});
+</script>
 
 <template>
-  <div>
-    <q-header class="q-py-sm header bg-green-8" elevated>
-      <q-toolbar>
-        <div class="flex justify-between full-width">
-          <div class="flex"></div>
-
-          <div>
-            <q-toggle
-              v-model="isDark"
-              checked-icon="eva-moon-outline"
-              color="orange"
-              unchecked-icon="eva-sun-outline"
-              @click="Dark.toggle()"
-              class="q-mr-sm"
-            />
-
-            <q-chip>
-              <q-avatar>
-                <img
-                  :src="
-                    userData?.image_url
-                      ? userData?.image_url
-                      : 'https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg'
-                  "
-                />
-              </q-avatar>
-              <span>{{ userData?.display_name }}</span>
-            </q-chip>
+  <div class="container">
+    <q-carousel
+      arrows
+      animated
+      v-model="slide"
+      height="450px"
+      style="border-radius: 8px"
+    >
+      <q-carousel-slide name="first" img-src="../assets/banner/banner1.jpg">
+        <div class="absolute-bottom custom-caption q-pa-lg text-white">
+          <div class="text-h2 text-bold">Tươi mát</div>
+          <div class="text-h6">
+            Mang đến sự thư thái cho không gian sống của bạn
           </div>
         </div>
-      </q-toolbar>
-    </q-header>
+      </q-carousel-slide>
+      <q-carousel-slide name="second" img-src="../assets/banner/banner2.jpg">
+        <div class="absolute-bottom custom-caption q-pa-lg text-pink">
+          <div class="text-h2 text-bold">Trẻ trung</div>
+          <div class="text-h6">Một chút dễ thương cho ngày mới hiệu quả</div>
+        </div>
+      </q-carousel-slide>
+      <q-carousel-slide name="third" img-src="../assets/banner/banner3.jpg">
+        <div class="absolute-bottom custom-caption q-pa-lg text-white">
+          <div class="text-h2 text-bold">First stop</div>
+          <div class="text-h6">Mountains</div>
+        </div>
+      </q-carousel-slide>
+    </q-carousel>
+
+    <!-- PRODUCT SESSION -->
+    <div class="wrap-product q-py-lg">
+      <span class="text-h4 text-bold text-grey-9">Tất cả sản phẩm</span>
+      <q-list class="row q-gutter-lg q-mt-xs">
+        <q-card
+          v-for="(item, index) in storeIndex.listProduct"
+          :key="index"
+          class="my-card col"
+          style="border-radius: 8px"
+        >
+          <q-card-section>
+            <q-img
+              :src="item.image_url"
+              :ratio="12 / 9"
+              spinner-color="primary"
+              spinner-size="82px"
+              class="card-image"
+            />
+
+            <div class="column" style="height: 120px">
+              <span class="text-h5 text-bold text-link text-grey-9 q-py-sm">
+                {{ item.name }}
+              </span>
+              <span class="text-grey-7">{{ item.description }}</span>
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <div class="flex justify-between" style="align-items: center">
+              <div class="text-subtitle2 text-bold">
+                by {{ item.user_id.display_name }}
+              </div>
+              <div class="text-green-8 text-bold text-h5">
+                {{ Utils.formatMoney(item.price) }}
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-list>
+
+      <div class="flex flex-center q-py-lg">
+        <q-btn color="grey-7" label="Xem thêm" outline class="text-bold" />
+      </div>
+    </div>
+
+    <!-- ABOUT US SESSION -->
+
+    <div></div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  padding: 0em 5em;
+}
+
+.my-card {
+  .card-image {
+    cursor: pointer;
+    &:hover {
+      .text-link {
+        text-decoration: underline;
+        transition: all 0.3s ease;
+      }
+    }
+  }
+
+  .text-link {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+      transition: all 0.3s ease;
+    }
+  }
+}
+</style>

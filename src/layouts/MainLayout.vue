@@ -22,91 +22,244 @@ onBeforeMount(() => {});
 
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="q-py-sm header bg-green-8" elevated>
-      <q-toolbar>
-        <div class="flex justify-between full-width">
-          <div class="flex"></div>
-
-          <div>
-            <q-toggle
-              v-model="isDark"
-              checked-icon="eva-moon-outline"
-              color="orange"
-              unchecked-icon="eva-sun-outline"
-              @click="Dark.toggle()"
-              class="q-mr-sm"
-            />
-
-            <q-chip>
-              <q-avatar>
-                <img
-                  :src="
-                    userData?.image_url
-                      ? userData?.image_url
-                      : 'https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg'
-                  "
-                />
-              </q-avatar>
-              <span>{{ userData?.display_name }}</span>
-            </q-chip>
-          </div>
-        </div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer show-if-above v-model="drawer" :width="200" :breakpoint="500">
-      <q-scroll-area class="fit">
-        <div class="logo-container flex flex-center q-py-md">
+    <q-header class="q-py-sm header" elevated>
+      <div>
+        <!-- <q-img
+          src="../assets/images/logo-full.png"
+          :ratio="16 / 9"
+          spinner-color="primary"
+          spinner-size="82px"
+        /> -->
+        <router-link to="/">
           <img
             src="../assets/images/logo-full.png"
             alt="Logo"
-            class="logo"
-            style="width: 100px"
-          />
+            class="logo cursor-pointer"
+            style="width: 80px"
+        /></router-link>
+      </div>
 
-          <span class="text-center text-bold" style="padding: 1em 1em"
-            >Tiện lợi - Nhanh chóng - Tin cậy</span
-          >
+      <div class="flex router-box" style="align-items: center">
+        <ul class="flex q-gutter-lg text-bold text-subtitle1">
+          <li>Trang chủ</li>
+          <li>Giới thiệu</li>
+          <li>Sản phẩm</li>
+          <li>Kiểm tra đơn hàng</li>
+          <li>Liên hệ</li>
+        </ul>
+      </div>
 
-          Hotline: 19008569
-        </div>
-        <q-list padding class="menu-list">
-          <div v-for="(item, index) in listRouter" :key="index">
-            <router-link
-              :to="item.path"
-              :class="isDark ? 'text-grey-2' : 'text-black'"
-            >
-              <q-item clickable v-ripple>
-                <q-item-section avatar>
-                  <q-icon class="text-primary" :name="item.icon" />
-                </q-item-section>
+      <div class="flex q-gutter-lg" style="align-items: center">
+        <q-icon
+          name="eva-shopping-cart-outline"
+          class="cursor-pointer"
+          size="md"
+        >
+          <q-badge color="orange" floating>0</q-badge>
+        </q-icon>
 
-                <q-item-section>
-                  <span> {{ item.name }}</span>
-                </q-item-section>
-              </q-item>
-            </router-link>
+        <q-btn
+          to="login"
+          color="black"
+          label="Đăng nhập"
+          @click="onClick"
+          push
+        />
+        <q-btn
+          to="register"
+          color="white"
+          class="text-black"
+          label="Đăng ký"
+          @click="onClick"
+          push
+        />
+        <!-- <q-toolbar>
+          <div class="flex justify-between full-width">
+            <div class="flex"></div>
+
+            <div>
+              <q-toggle
+                v-model="isDark"
+                checked-icon="eva-moon-outline"
+                color="orange"
+                unchecked-icon="eva-sun-outline"
+                @click="Dark.toggle()"
+                class="q-mr-sm"
+              />
+            </div>
           </div>
-
-          <q-item @click="storeAuthentication.signOut" clickable v-ripple>
-            <q-item-section avatar>
-              <q-icon class="text-red-8 text-bold" name="logout" />
-            </q-item-section>
-
-            <q-item-section> Đăng xuất </q-item-section>
-          </q-item>
-        </q-list>
-      </q-scroll-area>
-    </q-drawer>
+        </q-toolbar> -->
+      </div>
+    </q-header>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <!-- FOOTER SESSION -->
+    <footer class="footer bg-black text-white q-pa-xl" elevated>
+      <q-page-container>
+        <div class="row justify-around">
+          <!-- Company Info -->
+          <div class="col-xs-12 col-md-3 footer-section">
+            <h6 class="footer-title">CÔNG TY TNHH SOYN</h6>
+            <p class="footer-text">
+              Giấy phép đăng ký kinh doanh số 0315015539 do Sở Kế hoạch & Đầu tư
+              TP. Hồ Chí Minh cấp ngày 26/04/2018
+            </p>
+            <h6 class="footer-title q-mt-md">Nhận tin từ chúng tôi</h6>
+            <q-input
+              outlined
+              dense
+              placeholder="Email nhận tin"
+              class="footer-input"
+            />
+            <q-btn label="Đăng ký" color="red" class="footer-btn" />
+          </div>
+
+          <!-- Contact Info -->
+          <div class="col-xs-12 col-md-3 footer-section">
+            <h6 class="footer-title">ĐỊA CHỈ LIÊN HỆ</h6>
+            <p class="footer-text">
+              104/2 Mai Thị Lựu, P. Đa Kao, Quận 1, TP Hồ Chí Minh
+            </p>
+            <p class="footer-text">0899456699</p>
+            <div class="row q-gutter-sm q-mt-md">
+              <q-btn icon="eva-facebook" flat round dense class="social-btn" />
+              <q-btn icon="eva-google" flat round dense class="social-btn" />
+              <!-- <q-btn icon="instagram" flat round dense class="social-btn" /> -->
+            </div>
+          </div>
+
+          <!-- Information Links -->
+          <div class="col-xs-12 col-md-3 footer-section">
+            <h6 class="footer-title">THÔNG TIN</h6>
+            <ul class="footer-links">
+              <li><a href="#" class="footer-link">Giới thiệu</a></li>
+              <li><a href="#" class="footer-link">Điều khoản dịch vụ</a></li>
+              <li><a href="#" class="footer-link">Chính sách chung</a></li>
+              <li><a href="#" class="footer-link">Chính sách bảo mật</a></li>
+              <li><a href="#" class="footer-link">Hướng dẫn mua hàng</a></li>
+              <li><a href="#" class="footer-link">Liên hệ</a></li>
+            </ul>
+          </div>
+
+          <!-- Facebook -->
+          <div class="col-xs-12 col-md-3 footer-section">
+            <h6 class="footer-title">FACEBOOK</h6>
+            <iframe
+              src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FSoynPage&tabs=timeline&width=250&height=130&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+              width="100%"
+              height="130"
+              style="border: none; overflow: hidden"
+              scrolling="no"
+              frameborder="0"
+              allowfullscreen="true"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            ></iframe>
+          </div>
+        </div>
+      </q-page-container>
+    </footer>
   </q-layout>
 </template>
 
 <style lang="scss" scoped>
 * {
   text-decoration: none;
+  list-style-type: none;
+}
+
+.header {
+  background-color: white;
+  color: #111;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3em 5em;
+}
+
+.router-box ul li {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #5b913b;
+    // transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+}
+
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 2rem 15em;
+  // display: flex;
+  // justify-content: space-between;
+}
+
+.footer-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.footer-input {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.footer-btn {
+  width: 100%;
+}
+
+.social-btn {
+  background-color: #555;
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.footer-link:hover {
+  color: #e91e63;
+}
+
+.footer-section {
+  padding: 0 1em;
+  margin-bottom: 2rem;
 }
 </style>

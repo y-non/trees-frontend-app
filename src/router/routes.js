@@ -39,9 +39,21 @@ const routes = [
 
   {
     path: "/",
-    component: IndexPageVue,
-    children: [],
+    component: () => import("src/layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: IndexPageVue,
+        name: "IndexPageVue",
+      },
+    ],
   },
+
+  // {
+  //   path: "/",
+  //   component: IndexPageVue,
+  //   children: [],
+  // },
 
   // {
   //   path: "/admin",
