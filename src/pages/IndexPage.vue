@@ -21,6 +21,9 @@ onMounted(async () => {
       v-model="slide"
       height="450px"
       style="border-radius: 8px"
+      swipeable
+      infinite
+      autoplay
     >
       <q-carousel-slide name="first" img-src="../assets/banner/banner1.jpg">
         <div class="absolute-bottom custom-caption q-pa-lg text-white">
@@ -38,8 +41,8 @@ onMounted(async () => {
       </q-carousel-slide>
       <q-carousel-slide name="third" img-src="../assets/banner/banner3.jpg">
         <div class="absolute-bottom custom-caption q-pa-lg text-white">
-          <div class="text-h2 text-bold">First stop</div>
-          <div class="text-h6">Mountains</div>
+          <div class="text-h2 text-bold">Năng động</div>
+          <!-- <div class="text-h6">Mountains</div> -->
         </div>
       </q-carousel-slide>
     </q-carousel>
@@ -47,11 +50,11 @@ onMounted(async () => {
     <!-- PRODUCT SESSION -->
     <div class="wrap-product q-py-lg">
       <span class="text-h4 text-bold text-grey-9">Tất cả sản phẩm</span>
-      <q-list class="row q-gutter-lg q-mt-xs">
+      <q-list class="row q-gutter-lg q-mt-xs justify-between">
         <q-card
           v-for="(item, index) in storeIndex.listProduct"
           :key="index"
-          class="my-card col"
+          class="my-card col-md-2"
           style="border-radius: 8px"
         >
           <q-card-section>
@@ -63,11 +66,17 @@ onMounted(async () => {
               class="card-image"
             />
 
-            <div class="column" style="height: 120px">
-              <span class="text-h5 text-bold text-link text-grey-9 q-py-sm">
+            <div class="column" style="height: 150px">
+              <span class="text-h6 text-bold text-link text-grey-9 q-py-sm">
                 {{ item.name }}
               </span>
               <span class="text-grey-7">{{ item.description }}</span>
+              <!-- style="
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  width: 100%;
+                  overflow: hidden;
+                " -->
             </div>
           </q-card-section>
           <q-card-section>
@@ -96,7 +105,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .container {
-  padding: 0em 5em;
+  padding: 0em 10em;
 }
 
 .my-card {

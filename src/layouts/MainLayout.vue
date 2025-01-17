@@ -102,7 +102,7 @@ onBeforeMount(() => {});
         <div class="row justify-around">
           <!-- Company Info -->
           <div class="col-xs-12 col-md-3 footer-section">
-            <h6 class="footer-title">CÔNG TY TNHH SOYN</h6>
+            <h6 class="footer-title">CÔNG TY TNHH TREES</h6>
             <p class="footer-text">
               Giấy phép đăng ký kinh doanh số 0315015539 do Sở Kế hoạch & Đầu tư
               TP. Hồ Chí Minh cấp ngày 26/04/2018
