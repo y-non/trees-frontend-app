@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
 import { Utils } from "src/utils/Utils";
+import { useUtilsStore } from "./UtilsStore";
+import { Notify } from "quasar";
 
 export const userDetailStore = defineStore("detail", {
   state: () => ({
@@ -68,17 +70,71 @@ export const userDetailStore = defineStore("detail", {
 
     async clickAddToCard(itemAdd) {
       try {
-        console.log(itemAdd);
-        return;
+        const storageUtil = useUtilsStore();
 
-        const payload = {};
+        const checkItemExist = storageUtil.listCart.find(
+          (item) => item.id === itemAdd.id
+        );
+
+        if (checkItemExist) {
+          this.updateDataCart(itemAdd);
+        } else {
+          const result = await this.addToCart(itemAdd);
+
+          if (result) {
+            Notify.create({
+              message: "Thêm vào giỏ hàng thành công!",
+              type: "positive",
+              timeout: 2000,
+              position: "top-right",
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Internal Server Error: ");
+      }
+    },
+
+    async addToCart(dataAdd) {
+      try {
+        const userData = storageUtil.getLocalStorageData("userAuthInfo");
+
+        const payload = {
+          user_id: userData.id,
+          product_id: dataAdd.id,
+          quantity: dataAdd.number,
+        };
 
         const { data, error } = await supabase
           .from("carts")
           .insert(payload)
           .select();
+
+        if (error) {
+          return false;
+        } else {
+          return true;
+        }
       } catch (err) {
-        console.error("Internal Server Error: ");
+        console.error("Internal Server Erorr: ", err);
+      }
+    },
+
+    async updateDataCart(dataUpdate) {
+      try {
+        const payload = {
+          user_id: "",
+          product_id: "",
+          quantity: "",
+        };
+
+        const { data, error } = await supabase
+          .from("users")
+          .update(payload)
+          .eq("id", dataUpdate.id)
+          .select();
+      } catch (err) {
+        console.error("Internal Server Erorr: ", err);
       }
     },
   },
