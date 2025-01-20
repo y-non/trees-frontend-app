@@ -5,11 +5,11 @@ import { supabase } from "src/utils/superbase";
 
 export const useUtilsStore = defineStore("utils", {
   state: () => ({
-    currentCardOrder: 0,
+    listCart: [],
   }),
   actions: {
-    getInit() {
-      this.currentCardOrder = this.getCurrentCardOrder();
+    async getInit() {
+      this.listCart = await this.getListCart();
     },
 
     async fetchMenuData() {
@@ -79,12 +79,17 @@ export const useUtilsStore = defineStore("utils", {
       }
     },
 
-    getCurrentCardOrder() {
+    async getListCart() {
       try {
-        const currentCart = storageUtil.getLocalStorageData("cartItem");
-        return currentCart?.length ?? 0;
+        let { data: carts, error } = await supabase.from("carts").select("*");
+
+        if (error) {
+          console.error("Caught error when fetching data cart: ", error);
+        } else {
+          return carts;
+        }
       } catch (err) {
-        console.error("Have error when handling getCurrentCardOrder(): ", err);
+        console.error("Internal Server Error: ", err);
       }
     },
   },

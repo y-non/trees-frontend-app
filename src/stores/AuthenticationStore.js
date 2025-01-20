@@ -10,6 +10,18 @@ export const useAuthenticationStore = defineStore("authentication", {
     repassword: "",
     userList: [],
     isLogin: false,
+    listRole: [
+      {
+        id: "user",
+        label: "Người mua",
+      },
+
+      {
+        id: "seller",
+        label: "Người bán",
+      },
+    ],
+    roleSelected: "",
   }),
   actions: {
     async getInit() {
@@ -54,9 +66,13 @@ export const useAuthenticationStore = defineStore("authentication", {
           if (role === "admin") {
             this.router.push("/admin");
             Loading.hide();
-          } else {
+          } else if (role === "seller") {
             storageUtil.setLocalStorageData("role", "seller");
             this.router.push("/seller/product");
+            Loading.hide();
+          } else {
+            storageUtil.setLocalStorageData("role", "user");
+            this.router.push("/");
             Loading.hide();
           }
 

@@ -66,15 +66,17 @@ export const userDetailStore = defineStore("detail", {
       }
     },
 
-    clickAddToCard(itemAdd) {
+    async clickAddToCard(itemAdd) {
       try {
         console.log(itemAdd);
         return;
 
-        let currentCart = storageUtil.getLocalStorageData("cartItem");
-        currentCart.push(itemAdd);
+        const payload = {};
 
-        storageUtil.setLocalStorageData("cartItem", currentCart);
+        const { data, error } = await supabase
+          .from("carts")
+          .insert(payload)
+          .select();
       } catch (err) {
         console.error("Internal Server Error: ");
       }

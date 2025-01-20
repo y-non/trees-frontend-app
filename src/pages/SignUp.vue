@@ -43,7 +43,8 @@ const toggleConfirmPassword = () => {
             storeAuthentication.createAccount(
               storeAuthentication.email,
               storeAuthentication.password,
-              storeAuthentication.name
+              storeAuthentication.name,
+              storeAuthentication.roleSelected.id
             )
           "
           class="form"
@@ -53,6 +54,14 @@ const toggleConfirmPassword = () => {
             v-model="storeAuthentication.name"
             label="Tên của bạn"
             required
+            :rules="[(val) => !!val || 'Không được để trống']"
+          />
+
+          <q-select
+            v-model="storeAuthentication.roleSelected"
+            :options="storeAuthentication.listRole"
+            label="Loại tài khoản"
+            outlined
             :rules="[(val) => !!val || 'Không được để trống']"
           />
 

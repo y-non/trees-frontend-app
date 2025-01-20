@@ -61,19 +61,19 @@ onBeforeMount(() => {});
           size="md"
         >
           <q-badge color="orange" floating>{{
-            storeUtils.currentCardOrder
+            storeUtils.listCart.length
           }}</q-badge>
         </q-icon>
 
         <q-btn
-          to="login"
+          to="/login"
           color="black"
           label="Đăng nhập"
           @click="onClick"
           push
         />
         <q-btn
-          to="register"
+          to="/register"
           color="white"
           class="text-black"
           label="Đăng ký"
