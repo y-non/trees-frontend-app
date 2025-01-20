@@ -70,16 +70,18 @@ onBeforeMount(() => {});
         </q-input>
 
         <div v-if="isLogin">
-          <q-icon
-            name="eva-shopping-cart-outline"
-            class="cursor-pointer q-mr-lg"
-            size="md"
-          >
-            <q-badge color="orange" floating>{{
-              storeUtils.listCart.length
-            }}</q-badge>
-          </q-icon>
-
+          <router-link to="/cart">
+            <q-icon
+              name="eva-shopping-cart-outline"
+              class="cursor-pointer q-mr-lg"
+              size="md"
+              color="grey"
+            >
+              <q-badge color="orange" floating>{{
+                storeUtils.listCart.length
+              }}</q-badge>
+            </q-icon>
+          </router-link>
           <!-- <q-toggle
             v-model="isDark"
             checked-icon="eva-moon-outline"

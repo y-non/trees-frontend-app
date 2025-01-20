@@ -85,8 +85,10 @@ export const useUtilsStore = defineStore("utils", {
 
         let { data: carts, error } = await supabase
           .from("carts")
-          .select("*")
+          .select("*, product_id(*)")
           .eq("user_id", userData.id);
+
+        console.log(carts);
 
         if (error) {
           console.error("Caught error when fetching data cart: ", error);

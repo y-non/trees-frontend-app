@@ -6,6 +6,7 @@ import SellerProduct from "src/pages/seller/SellerProduct.vue";
 import SettingPageVue from "src/pages/seller/SettingPage.vue";
 import IndexPageVue from "src/pages/IndexPage.vue";
 import DetailPageVue from "src/pages/DetailPage.vue";
+import CartPageVue from "src/pages/CartPage.vue";
 
 const routes = [
   {
@@ -52,6 +53,12 @@ const routes = [
         path: "/product/:id",
         component: DetailPageVue,
         name: "DetailPageVue",
+      },
+
+      {
+        path: "/cart",
+        component: CartPageVue,
+        name: "CartPageVue",
       },
     ],
   },
