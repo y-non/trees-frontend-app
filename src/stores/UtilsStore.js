@@ -81,7 +81,12 @@ export const useUtilsStore = defineStore("utils", {
 
     async getListCart() {
       try {
-        let { data: carts, error } = await supabase.from("carts").select("*");
+        const userData = storageUtil.getLocalStorageData("userAuthInfo");
+
+        let { data: carts, error } = await supabase
+          .from("carts")
+          .select("*")
+          .eq("user_id", userData.id);
 
         if (error) {
           console.error("Caught error when fetching data cart: ", error);

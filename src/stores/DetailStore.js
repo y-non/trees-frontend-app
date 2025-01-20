@@ -70,14 +70,25 @@ export const userDetailStore = defineStore("detail", {
 
     async clickAddToCard(itemAdd) {
       try {
-        const storageUtil = useUtilsStore();
+        const storeUtils = useUtilsStore();
 
-        const checkItemExist = storageUtil.listCart.find(
-          (item) => item.id === itemAdd.id
+        const checkItemExist = storeUtils.listCart.find(
+          (item) => item.product_id === itemAdd.id
         );
 
         if (checkItemExist) {
-          this.updateDataCart(itemAdd);
+          checkItemExist.numberAdd = itemAdd.number;
+
+          const result = await this.updateDataCart(checkItemExist);
+
+          if (result) {
+            Notify.create({
+              message: "Thêm vào giỏ hàng thành công!",
+              type: "positive",
+              timeout: 2000,
+              position: "top-right",
+            });
+          }
         } else {
           const result = await this.addToCart(itemAdd);
 
@@ -90,6 +101,8 @@ export const userDetailStore = defineStore("detail", {
             });
           }
         }
+
+        storeUtils.listCart = await storeUtils.getListCart();
       } catch (err) {
         console.error("Internal Server Error: ");
       }
@@ -123,16 +136,20 @@ export const userDetailStore = defineStore("detail", {
     async updateDataCart(dataUpdate) {
       try {
         const payload = {
-          user_id: "",
-          product_id: "",
-          quantity: "",
+          quantity: (dataUpdate.numberAdd += dataUpdate.quantity),
         };
 
         const { data, error } = await supabase
-          .from("users")
+          .from("carts")
           .update(payload)
           .eq("id", dataUpdate.id)
           .select();
+
+        if (error) {
+          return false;
+        } else {
+          return true;
+        }
       } catch (err) {
         console.error("Internal Server Erorr: ", err);
       }
