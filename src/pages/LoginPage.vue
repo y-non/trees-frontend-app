@@ -19,6 +19,16 @@ const togglePassword = () => {
 
 <template>
   <div class="login-page">
+    <router-link to="/">
+      <q-btn
+        color="primary"
+        icon="eva-arrow-back-outline"
+        label="Trang chủ"
+        flat
+        class="fixed"
+        style="top: 5%; left: 2%"
+      />
+    </router-link>
     <div class="login-container">
       <div class="logo-container">
         <img src="../assets/images/logo-full.png" alt="Logo" class="logo" />

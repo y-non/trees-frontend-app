@@ -50,51 +50,50 @@ onMounted(async () => {
     <!-- PRODUCT SESSION -->
     <div class="wrap-product q-py-lg">
       <span class="text-h4 text-bold text-grey-9">Tất cả sản phẩm</span>
-      <q-list class="row q-gutter-lg q-mt-xs justify-between">
-        <q-card
+      <q-list class="row q-mt-xs justify-start">
+        <div
           v-for="(item, index) in storeIndex.listProduct"
           :key="index"
-          class="my-card col-md-2"
-          style="border-radius: 8px"
+          class="my-card col-md-3 col-12"
         >
-          <q-card-section>
-            <router-link :to="`/product/${item.id}`">
-              <q-img
-                :src="item.image_url"
-                :ratio="12 / 9"
-                spinner-color="primary"
-                spinner-size="82px"
-                class="card-image"
-              />
-            </router-link>
+          <div class="q-pa-md">
+            <q-card class="my-card" style="border-radius: 8px">
+              <q-card-section>
+                <router-link :to="`/product/${item.id}`">
+                  <q-img
+                    :src="item.image_url"
+                    :ratio="12 / 9"
+                    spinner-color="primary"
+                    spinner-size="82px"
+                    class="card-image"
+                  />
+                </router-link>
 
-            <div class="column" style="height: 260px">
-              <router-link :to="`/product/${item.id}`">
-                <span class="text-h6 text-bold text-link text-grey-9 q-py-sm">
-                  {{ item.name }}
-                </span>
-              </router-link>
+                <div class="column" style="height: 150px">
+                  <router-link :to="`/product/${item.id}`">
+                    <span
+                      class="text-h6 text-bold text-link text-grey-9 q-py-sm"
+                    >
+                      {{ item.name }}
+                    </span>
+                  </router-link>
 
-              <span class="text-grey-7">{{ item.description }}</span>
-              <!-- style="
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  width: 100%;
-                  overflow: hidden;
-                " -->
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <div class="flex justify-between" style="align-items: center">
-              <div class="text-subtitle2 text-bold">
-                by {{ item.user_id.display_name }}
-              </div>
-              <div class="text-green-8 text-bold text-h5">
-                {{ Utils.formatMoney(item.price) }}
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
+                  <span class="text-grey-7 text-description">{{ item.description }}</span>
+                </div>
+              </q-card-section>
+              <q-card-section>
+                <div class="flex justify-between" style="align-items: center">
+                  <div class="text-subtitle2 text-bold">
+                    by {{ item.user_id.display_name }}
+                  </div>
+                  <div class="text-green-8 text-bold text-h5">
+                    {{ Utils.formatMoney(item.price) }}
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
       </q-list>
 
       <div class="flex flex-center q-py-lg">
@@ -131,5 +130,12 @@ onMounted(async () => {
       transition: all 0.3s ease;
     }
   }
+}
+
+.text-description {
+  max-height: 100px;
+  white-space: normal;
+  text-overflow: ellipsis !important;
+  overflow: hidden;
 }
 </style>
