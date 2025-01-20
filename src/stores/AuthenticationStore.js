@@ -55,6 +55,7 @@ export const useAuthenticationStore = defineStore("authentication", {
             this.router.push("/admin");
             Loading.hide();
           } else {
+            storageUtil.setLocalStorageData("role", "seller");
             this.router.push("/seller/product");
             Loading.hide();
           }
