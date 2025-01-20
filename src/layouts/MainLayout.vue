@@ -57,6 +57,18 @@ onBeforeMount(() => {});
       </div>
 
       <div class="flex q-gutter-lg" style="align-items: center">
+        <q-input
+          v-model="text"
+          type="text"
+          placeholder="Tìm kiếm..."
+          rounded
+          outlined
+        >
+          <template v-slot:append>
+            <q-icon name="eva-search-outline" size="md" />
+          </template>
+        </q-input>
+
         <q-icon
           name="eva-shopping-cart-outline"
           class="cursor-pointer"
