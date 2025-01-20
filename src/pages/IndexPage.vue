@@ -58,18 +58,23 @@ onMounted(async () => {
           style="border-radius: 8px"
         >
           <q-card-section>
-            <q-img
-              :src="item.image_url"
-              :ratio="12 / 9"
-              spinner-color="primary"
-              spinner-size="82px"
-              class="card-image"
-            />
+            <router-link :to="`/product/${item.id}`">
+              <q-img
+                :src="item.image_url"
+                :ratio="12 / 9"
+                spinner-color="primary"
+                spinner-size="82px"
+                class="card-image"
+              />
+            </router-link>
 
-            <div class="column" style="height: 150px">
-              <span class="text-h6 text-bold text-link text-grey-9 q-py-sm">
-                {{ item.name }}
-              </span>
+            <div class="column" style="height: 260px">
+              <router-link :to="`/product/${item.id}`">
+                <span class="text-h6 text-bold text-link text-grey-9 q-py-sm">
+                  {{ item.name }}
+                </span>
+              </router-link>
+
               <span class="text-grey-7">{{ item.description }}</span>
               <!-- style="
                   text-overflow: ellipsis;
