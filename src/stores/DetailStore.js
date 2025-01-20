@@ -1,20 +1,23 @@
 import { defineStore } from "pinia";
+import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
+import { Utils } from "src/utils/Utils";
 
 export const userDetailStore = defineStore("detail", {
   state: () => ({
     objectData: {},
     isLoading: false,
-    objectOrder: {
-      number: 1,
-    },
+
     listCategories: [],
     listProduct: [],
+    slide: 0,
   }),
   actions: {
     async getInit() {
       this.listCategories = await this.getCategories();
       this.listProduct = await this.getListProduct();
+
+      this.listProduct = Utils.chunkArray(this.listProduct, 3);
     },
 
     async getItemById(id) {
@@ -45,7 +48,7 @@ export const userDetailStore = defineStore("detail", {
       try {
         let { data: trees, error } = await supabase
           .from("trees")
-          .select("*, user_id(*)");
+          .select("*, user_id(*), category(*)");
 
         return trees;
       } catch (err) {
@@ -60,6 +63,20 @@ export const userDetailStore = defineStore("detail", {
         return data;
       } catch (err) {
         console.error("Internal Server Error: ", err);
+      }
+    },
+
+    clickAddToCard(itemAdd) {
+      try {
+        console.log(itemAdd);
+        return;
+
+        let currentCart = storageUtil.getLocalStorageData("cartItem");
+        currentCart.push(itemAdd);
+
+        storageUtil.setLocalStorageData("cartItem", currentCart);
+      } catch (err) {
+        console.error("Internal Server Error: ");
       }
     },
   },

@@ -5,6 +5,7 @@ import { userDetailStore } from "stores/DetailStore";
 
 import { useRouter } from "vue-router";
 import { Utils } from "src/utils/Utils";
+import { storageUtil } from "src/utils/storageUtil";
 const storeDetails = userDetailStore();
 
 const imageSrc = ref(
@@ -72,9 +73,10 @@ const handleMouseLeave = () => {
 
 onMounted(async () => {
   const routerValue = router.currentRoute.value.params.id;
+  storeDetails.objectData = await storeDetails.getItemById(routerValue);
+  storeDetails.objectData.number = 1;
 
   await storeDetails.getInit();
-  storeDetails.objectData = await storeDetails.getItemById(routerValue);
 });
 </script>
 
@@ -135,13 +137,13 @@ onMounted(async () => {
                         icon="eva-arrow-down-outline"
                         flat
                         @click="
-                          storeDetails.objectOrder.number > 1
-                            ? storeDetails.objectOrder.number--
+                          storeDetails.objectData.number > 1
+                            ? storeDetails.objectData.number--
                             : ''
                         "
                       />
                       <q-input
-                        v-model="storeDetails.objectOrder.number"
+                        v-model="storeDetails.objectData.number"
                         type="text"
                         outlined
                         style="width: 50px"
@@ -151,7 +153,7 @@ onMounted(async () => {
                         color="primary"
                         icon="eva-arrow-up-outline"
                         flat
-                        @click="storeDetails.objectOrder.number++"
+                        @click="storeDetails.objectData.number++"
                       />
                     </div>
                     <q-btn
@@ -159,7 +161,9 @@ onMounted(async () => {
                       icon="eva-shopping-cart-outline"
                       label="Mua hàng"
                       class="full-width"
-                      @click="onClick"
+                      @click="
+                        storeDetails.clickAddToCard(storeDetails.objectData)
+                      "
                     />
                   </div>
                 </div>
@@ -212,7 +216,7 @@ onMounted(async () => {
             transition-next="slide-left"
             swipeable
             animated
-            control-color="amber"
+            control-color="grey"
             navigation
             padding
             arrows
@@ -222,19 +226,17 @@ onMounted(async () => {
             <q-carousel-slide
               v-for="(item, index) in storeDetails.listProduct"
               :key="index"
-              :name="1"
-              class="column no-wrap"
+              :name="index"
+              class="column no-wrap q-pa-lg"
             >
               <div
                 class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
               >
                 <q-img
-                  class="rounded-borders col-6 full-height"
-                  :src="item.image_url"
-                />
-                <q-img
-                  class="rounded-borders col-6 full-height"
-                  src="https://cdn.quasar.dev/img/parallax1.jpg"
+                  v-for="(subItem, index) in item"
+                  :key="index"
+                  class="rounded-borders col-4 full-height"
+                  :src="subItem.image_url"
                 />
               </div>
             </q-carousel-slide>

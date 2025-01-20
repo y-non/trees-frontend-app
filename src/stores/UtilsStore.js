@@ -4,8 +4,14 @@ import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
 
 export const useUtilsStore = defineStore("utils", {
-  state: () => ({}),
+  state: () => ({
+    currentCardOrder: 0,
+  }),
   actions: {
+    getInit() {
+      this.currentCardOrder = this.getCurrentCardOrder();
+    },
+
     async fetchMenuData() {
       try {
         const menuLocal = JSON.parse(localStorage.getItem("menuData"));
@@ -70,6 +76,15 @@ export const useUtilsStore = defineStore("utils", {
         }
       } catch (err) {
         console.error("Internal Server Error: ", err);
+      }
+    },
+
+    getCurrentCardOrder() {
+      try {
+        const currentCart = storageUtil.getLocalStorageData("cartItem");
+        return currentCart?.length ?? 0;
+      } catch (err) {
+        console.error("Have error when handling getCurrentCardOrder(): ", err);
       }
     },
   },

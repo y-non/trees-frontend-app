@@ -11,7 +11,6 @@ export const useIndexStore = defineStore("index", {
     async getInit() {
       this.listCategories = await this.getCategories();
       this.listProduct = await this.getListProduct();
-      console.log(this.listProduct);
     },
 
     async getListProduct() {

@@ -27,10 +27,17 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["axios"],
+    boot: ["axios", "primevue"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: ["app.scss"],
+    // quasar.config.js
+    css: [
+      "app.scss", // Your existing styles
+      // "primevue/resources/themes/saga-blue/theme.css", // PrimeVue theme (choose one)
+      // "primevue/resources/primevue.min.css", // Core PrimeVue styles
+      // "primeicons/primeicons.css", // PrimeIcons
+      // "primeflex/primeflex.css", // Optional: PrimeFlex for utility classes
+    ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [

@@ -1,12 +1,16 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
-import { useAuthenticationStore } from "src/stores/AuthenticationStore";
+
+import { useUtilsStore } from "src/stores/UtilsStore";
+
 import { useRouter } from "vue-router";
 import { storageUtil } from "src/utils/storageUtil";
 import { Dark } from "quasar";
 
+const storeUtils = useUtilsStore();
+
 const router = useRouter();
-const storeAuthentication = useAuthenticationStore();
+
 const drawer = ref(false);
 const isLogin = storageUtil.getLocalStorageData("isLogin") || false;
 const routerName = ref("");
@@ -15,6 +19,7 @@ const isDark = ref(false);
 
 onMounted(async () => {
   const routerValue = router.currentRoute.value.fullPath;
+  storeUtils.getInit();
 });
 
 onBeforeMount(() => {});
@@ -55,7 +60,9 @@ onBeforeMount(() => {});
           class="cursor-pointer"
           size="md"
         >
-          <q-badge color="orange" floating>0</q-badge>
+          <q-badge color="orange" floating>{{
+            storeUtils.currentCardOrder
+          }}</q-badge>
         </q-icon>
 
         <q-btn
