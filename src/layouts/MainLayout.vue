@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
 
+import { useAuthenticationStore } from "src/stores/AuthenticationStore";
 import { useUtilsStore } from "src/stores/UtilsStore";
 
 import { useRouter } from "vue-router";
@@ -8,6 +9,7 @@ import { storageUtil } from "src/utils/storageUtil";
 import { Dark } from "quasar";
 
 const storeUtils = useUtilsStore();
+const storeAuthentication = useAuthenticationStore();
 
 const router = useRouter();
 
@@ -65,21 +67,69 @@ onBeforeMount(() => {});
           }}</q-badge>
         </q-icon>
 
-        <q-btn
-          to="/login"
-          color="black"
-          label="Đăng nhập"
-          @click="onClick"
-          push
-        />
-        <q-btn
-          to="/register"
-          color="white"
-          class="text-black"
-          label="Đăng ký"
-          @click="onClick"
-          push
-        />
+        <div v-if="isLogin">
+          <q-toggle
+            v-model="isDark"
+            checked-icon="eva-moon-outline"
+            color="orange"
+            unchecked-icon="eva-sun-outline"
+            @click="Dark.toggle()"
+            class="q-mr-sm"
+          />
+
+          <q-chip>
+            <q-avatar>
+              <img
+                :src="
+                  userData?.image_url
+                    ? userData?.image_url
+                    : 'https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg'
+                "
+              />
+            </q-avatar>
+            <span>{{ userData?.display_name }}</span>
+
+            <q-menu>
+              <q-list style="min-width: 100px">
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="storeAuthentication.signOut()"
+                >
+                  <q-item-section
+                    ><div class="flex flex-center">
+                      <q-icon
+                        name="eva-log-out-outline"
+                        size="sm"
+                        color="red-8"
+                      />
+                      Đăng xuất
+                    </div></q-item-section
+                  >
+                </q-item>
+                <q-separator />
+              </q-list>
+            </q-menu>
+          </q-chip>
+        </div>
+
+        <div v-else>
+          <q-btn
+            to="/login"
+            color="black"
+            label="Đăng nhập"
+            @click="onClick"
+            push
+          />
+          <q-btn
+            to="/register"
+            color="white"
+            class="text-black"
+            label="Đăng ký"
+            @click="onClick"
+            push
+          />
+        </div>
         <!-- <q-toolbar>
           <div class="flex justify-between full-width">
             <div class="flex"></div>
