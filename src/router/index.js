@@ -44,6 +44,12 @@ export default route(function (/* { store, ssrContext } */) {
       role === "seller"
     ) {
       return next("/seller/product");
+    } else if (
+      (to.fullPath === "/login" || to.fullPath === "/register") &&
+      isLogin &&
+      role === "user"
+    ) {
+      return next("/");
     }
 
     next();

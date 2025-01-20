@@ -69,25 +69,25 @@ onBeforeMount(() => {});
           </template>
         </q-input>
 
-        <q-icon
-          name="eva-shopping-cart-outline"
-          class="cursor-pointer"
-          size="md"
-        >
-          <q-badge color="orange" floating>{{
-            storeUtils.listCart.length
-          }}</q-badge>
-        </q-icon>
-
         <div v-if="isLogin">
-          <q-toggle
+          <q-icon
+            name="eva-shopping-cart-outline"
+            class="cursor-pointer q-mr-lg"
+            size="md"
+          >
+            <q-badge color="orange" floating>{{
+              storeUtils.listCart.length
+            }}</q-badge>
+          </q-icon>
+
+          <!-- <q-toggle
             v-model="isDark"
             checked-icon="eva-moon-outline"
             color="orange"
             unchecked-icon="eva-sun-outline"
             @click="Dark.toggle()"
             class="q-mr-sm"
-          />
+          /> -->
 
           <q-chip>
             <q-avatar>
@@ -125,7 +125,7 @@ onBeforeMount(() => {});
           </q-chip>
         </div>
 
-        <div v-else>
+        <div v-else class="q-gutter-sm">
           <q-btn
             to="/login"
             color="black"
@@ -142,6 +142,7 @@ onBeforeMount(() => {});
             push
           />
         </div>
+
         <!-- <q-toolbar>
           <div class="flex justify-between full-width">
             <div class="flex"></div>
