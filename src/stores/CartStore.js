@@ -8,6 +8,7 @@ export const useCartStore = defineStore("cart", {
   state: () => ({
     listCart: [],
     filterProduct: "",
+    tableMultiSelect: [],
   }),
   actions: {
     async getInit() {
@@ -84,6 +85,14 @@ export const useCartStore = defineStore("cart", {
         storeUtils.listCart = await storeUtils.getListCart();
 
         return storeUtils.listCart;
+      } catch (err) {
+        console.error("Internal Server Error: ", err);
+      }
+    },
+
+    clickToOrder(listOrder) {
+      try {
+        console.log(JSON.stringify(listOrder, null, 2));
       } catch (err) {
         console.error("Internal Server Error: ", err);
       }

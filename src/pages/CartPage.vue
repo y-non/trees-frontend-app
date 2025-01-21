@@ -77,7 +77,7 @@ const columns = [
       bordered
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="48"
-      row-key="index"
+      row-key="name"
       title="Danh sách sản phẩm"
       :rows="storeCart.listCart"
       :columns="columns"
@@ -86,7 +86,7 @@ const columns = [
       style="min-height: 60vh"
       :filter="storeCart.filterProduct"
     >
-      <template v-slot:top-right><q-btn color="green-9" icon="eva-shopping-cart-outline" label="Đặt hàng" @click="onClick" /></template>
+      <template v-slot:top-right><q-btn color="green-9" icon="eva-shopping-cart-outline" label="Đặt hàng" @click="storeCart.clickToOrder(storeCart.tableMultiSelect)" /></template>
 
       <template v-slot:body="props">
         <tr style="width: 100%" :props="props" :key="`m_${props.row.index}`">
