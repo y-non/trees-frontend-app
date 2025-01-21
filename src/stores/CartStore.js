@@ -3,6 +3,7 @@ import { Dialog } from "quasar";
 import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
 import { useUtilsStore } from "./UtilsStore";
+import { base64Utils } from "src/utils/base64";
 
 export const useCartStore = defineStore("cart", {
   state: () => ({
@@ -92,10 +93,24 @@ export const useCartStore = defineStore("cart", {
 
     clickToOrder(listOrder) {
       try {
-        console.log(JSON.stringify(listOrder, null, 2));
+        // Convert the object to a JSON string
+        const jsonString = JSON.stringify(listOrder);
+
+        // Convert the string to a Uint8Array (array of bytes)
+        const stringData = new TextEncoder().encode(jsonString);
+
+        // Encode to Base64
+        const base64 = base64Utils.bytesToBase64(stringData);
+
+        this.router.push(`/checkout/${base64}`);
       } catch (err) {
         console.error("Internal Server Error: ", err);
       }
     },
+
+    // const encode = base64Utils.base64ToBytes(base64);
+
+    // const encodeString = new TextDecoder().decode(encode);
+    // console.log(JSON.parse(encodeString));
   },
 });
