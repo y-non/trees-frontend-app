@@ -14,7 +14,6 @@ export const useCartStore = defineStore("cart", {
   actions: {
     async getInit() {
       this.listCart = await this.getListCart();
-      console.log(this.listCart);
       this.listCart = this.listCart.map((item) => {
         return {
           ...item,
@@ -29,7 +28,7 @@ export const useCartStore = defineStore("cart", {
 
         let { data: carts, error } = await supabase
           .from("carts")
-          .select("*, product_id(*)")
+          .select("*, product_id(*, category(*))")
           .eq("user_id", userData.id);
 
         if (error) {
@@ -107,10 +106,5 @@ export const useCartStore = defineStore("cart", {
         console.error("Internal Server Error: ", err);
       }
     },
-
-    // const encode = base64Utils.base64ToBytes(base64);
-
-    // const encodeString = new TextDecoder().decode(encode);
-    // console.log(JSON.parse(encodeString));
   },
 });
