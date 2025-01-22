@@ -1,17 +1,24 @@
 <script setup>
 import { base64Utils } from "src/utils/base64";
+import { storageUtil } from "src/utils/storageUtil";
 import { Utils } from "src/utils/Utils";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-const listOrder = ref([]);
+import { useCheckoutStore } from "src/stores/CheckoutStore";
 
+const storeCheckout = useCheckoutStore();
+const listOrder = ref([]);
 const insuranceSelected = ref(false);
 const userNote = ref("");
 const router = useRouter();
 const total = ref(0);
+const userData = ref("");
 
 onMounted(() => {
   try {
+    //get user data from local
+    userData.value = storageUtil.getLocalStorageData("userAuthInfo");
+
     // Get value from URL
     const routerStateParams = router.currentRoute.value.params.state;
 
@@ -49,13 +56,20 @@ onMounted(() => {
           <q-icon name="place" color="red" />
           <div class="col q-pl-md">
             <div class="text-subtitle2">Địa Chỉ Nhận Hàng</div>
-            <div class="text-body2">Trần Anh Khoa (+84) 395364898</div>
+            <div class="text-body2">
+              {{ userData.display_name }} (+84) {{ userData.phone }}
+            </div>
             <div class="text-caption text-grey">
-              316 Phạm Văn Đồng, Phường Hiệp Bình Chánh, Quận Thủ Đức, TP. Hồ
-              Chí Minh
+              {{ userData.address }}
             </div>
           </div>
-          <q-btn flat color="primary" label="Thay Đổi" size="sm" />
+          <q-btn
+            flat
+            color="primary"
+            label="Thay Đổi"
+            size="sm"
+            to="/settings"
+          />
         </div>
       </q-card-section>
     </q-card>
@@ -106,7 +120,11 @@ onMounted(() => {
     <!-- Notes and Summary -->
     <q-card class="q-ma-md shadow-2">
       <q-card-section>
-        <q-input filled v-model="userNote" label="Lưu ý cho Người bán..." />
+        <q-input
+          filled
+          v-model="userData.note"
+          label="Lưu ý cho Người bán..."
+        />
       </q-card-section>
 
       <q-separator />
