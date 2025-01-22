@@ -63,13 +63,7 @@ onMounted(() => {
               {{ userData.address }}
             </div>
           </div>
-          <q-btn
-            flat
-            color="primary"
-            label="Thay Đổi"
-            size="sm"
-            to="/settings"
-          />
+          <q-btn flat color="primary" label="Thay Đổi" size="sm" />
         </div>
       </q-card-section>
     </q-card>
@@ -120,11 +114,7 @@ onMounted(() => {
     <!-- Notes and Summary -->
     <q-card class="q-ma-md shadow-2">
       <q-card-section>
-        <q-input
-          filled
-          v-model="userData.note"
-          label="Lưu ý cho Người bán..."
-        />
+        <q-input filled v-model="userNote" label="Lưu ý cho Người bán..." />
       </q-card-section>
 
       <q-separator />

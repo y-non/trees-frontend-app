@@ -4,5 +4,12 @@ export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
     orderObject: {},
   }),
-  actions: {},
+  actions: {
+    clickOrder() {
+      try {
+      } catch (err) {
+        console.error("Internal Server Error: ", err);
+      }
+    },
+  },
 });
