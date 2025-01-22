@@ -8,6 +8,7 @@ import IndexPageVue from "src/pages/IndexPage.vue";
 import DetailPageVue from "src/pages/DetailPage.vue";
 import CartPageVue from "src/pages/CartPage.vue";
 import CheckoutPageVue from "src/pages/CheckoutPage.vue";
+import SettingUserPageVue from "src/pages/seller/SettingUserPage.vue";
 
 const routes = [
   {
@@ -66,6 +67,12 @@ const routes = [
         path: "/checkout/:state",
         component: CheckoutPageVue,
         name: "CheckoutPageVue",
+      },
+
+      {
+        path: "/settings",
+        component: SettingUserPageVue,
+        name: "SettingUserPageVue",
       },
     ],
   },

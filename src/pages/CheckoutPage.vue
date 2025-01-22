@@ -91,13 +91,13 @@ onMounted(() => {
 
       <q-card-section>
         <q-checkbox
-          label="Bảo hiểm Thiết bị điện tử"
+          label="Bảo hiểm đơn hàng"
           size="sm"
           color="primary"
           v-model="insuranceSelected"
         />
         <div class="text-caption text-grey q-mt-xs">
-          Bảo vệ thiết bị của bạn trước những thiệt hại do sự cố, tiếp xúc với
+          Bảo vệ đơn hàng của bạn trước những thiệt hại do sự cố, tiếp xúc với
           chất lỏng và mất cắp.
         </div>
       </q-card-section>

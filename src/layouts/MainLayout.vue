@@ -106,12 +106,29 @@ onBeforeMount(() => {});
             <q-menu>
               <q-list style="min-width: 100px">
                 <q-item
+                  to="/settings"
                   clickable
                   v-close-popup
                   @click="storeAuthentication.signOut()"
                 >
                   <q-item-section
-                    ><div class="flex flex-center">
+                    ><div class="flex flex-center justify-between">
+                      <q-icon
+                        name="eva-settings-outline"
+                        size="sm"
+                        color="primary"
+                      />
+                      Cài đặt
+                    </div></q-item-section
+                  >
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="storeAuthentication.signOut()"
+                >
+                  <q-item-section
+                    ><div class="flex flex-center justify-between">
                       <q-icon
                         name="eva-log-out-outline"
                         size="sm"
