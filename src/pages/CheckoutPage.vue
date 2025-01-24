@@ -151,7 +151,7 @@ onMounted(() => {
   </q-page>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .q-page {
   max-width: 600px;
   margin: 0 auto;

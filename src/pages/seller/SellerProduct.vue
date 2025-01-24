@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useSellerProductStore } from "src/stores/seller/SellerProductStore";
 import { Utils } from "src/utils/Utils";
 
@@ -8,28 +8,6 @@ const storeSellerProduct = useSellerProductStore();
 onMounted(async () => {
   await storeSellerProduct.getInit();
 });
-
-// Mock data for table rows
-const mockData = ref([
-  {
-    id: 1,
-    name: "Chậu sứ giả trang trí",
-    code: "B2545S1",
-    description: "Size: 40x50, trắng",
-    price: "508.500 đ",
-    stock: 10,
-    sold: 5,
-  },
-  {
-    id: 2,
-    name: "Chậu sứ giả trang trí V2",
-    code: "B2545S1",
-    description: "Size: 40x50, trắng",
-    price: "508.500 đ",
-    stock: 20,
-    sold: 0,
-  },
-]);
 
 // Columns definition for the q-table
 const columns = [
