@@ -73,25 +73,28 @@ const loadMap = (address) => {
                   "
                   style="width: 150px; height: 150px; border-radius: 50%"
                   class="q-mb-sm"
+                  @click="clickShowSelectFile"
                 />
-                <q-file
-                  v-model="storeSettings.userData.selectedFile"
-                  label="Chọn ảnh mới"
-                  accept="image/*"
-                  outlined
-                  dense
-                  counter
-                  clearable
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="cloud_upload" @click.stop.prevent />
-                  </template>
-                </q-file>
               </div>
             </q-col>
 
             <!-- Right Column -->
             <q-col cols="8">
+              <span class="text-h6">1. Thông tin cá nhân</span>
+              <q-file
+                v-model="storeSettings.userData.selectedFile"
+                label="Chọn ảnh mới"
+                accept="image/*"
+                outlined
+                dense
+                counter
+                clearable
+              >
+                <template v-slot:prepend>
+                  <q-icon name="cloud_upload" @click.stop.prevent />
+                </template>
+              </q-file>
+
               <q-input
                 v-model="storeSettings.userData.email"
                 label="Email"
@@ -105,7 +108,7 @@ const loadMap = (address) => {
                 label="Tên hiển thị"
                 outlined
                 dense
-                class="q-mb-md"
+                :rules="[(val) => !!val || 'Không được để rỗng!']"
               />
               <q-input
                 v-model="storeSettings.userData.role"
@@ -121,7 +124,7 @@ const loadMap = (address) => {
                 type="tel"
                 outlined
                 dense
-                class="q-mb-md"
+                :rules="[(val) => !!val || 'Không được để rỗng!']"
               />
               <q-input
                 v-model="storeSettings.userData.address"
@@ -129,7 +132,7 @@ const loadMap = (address) => {
                 type="textarea"
                 outlined
                 dense
-                class="q-mb-md"
+                :rules="[(val) => !!val || 'Không được để rỗng!']"
               />
               <q-input
                 v-model="storeSettings.userData.description"
@@ -138,6 +141,44 @@ const loadMap = (address) => {
                 outlined
                 dense
                 class="q-mb-md"
+              />
+
+              <span class="text-h6">2. Thông tin thanh toán</span>
+              <p class="text-grey">
+                Lưu ý: Thông tin bên dưới yêu cầu người dùng phải cung cấp đúng
+                thông tin chính xác, nếu không công ty sẽ không chịu trách nhiệm
+                cho các vấn đề tranh chấp sau này.
+              </p>
+
+              <q-select
+                v-model="storeSettings.userData.bank_name"
+                :options="storeSettings.filterBanks"
+                label="Ngân hàng thụ hưởng"
+                option-label="name"
+                option-value="id"
+                outlined
+                dense
+                use-input
+                @filter="storeSettings.filterFn"
+                :rules="[(val) => !!val || 'Không được để rỗng!']"
+              />
+
+              <q-input
+                v-model="storeSettings.userData.account_name"
+                label="Tên chủ thẻ"
+                outlined
+                dense
+                hint="Họ tên vui lòng viết không dấu"
+                class="q-mb-sm"
+                :rules="[(val) => !!val || 'Không được để rỗng!']"
+              />
+
+              <q-input
+                v-model="storeSettings.userData.account_number"
+                label="STK thụ hưởng"
+                outlined
+                dense
+                :rules="[(val) => !!val || 'Không được để rỗng!']"
               />
             </q-col>
           </q-grid>

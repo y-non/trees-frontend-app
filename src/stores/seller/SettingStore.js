@@ -1,19 +1,37 @@
 import { defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
+import axios from "axios";
 import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
 
 export const useSettingStore = defineStore("seller-settings", {
   state: () => ({
     userData: {},
+    listBankData: [],
+    filterBanks: [],
+    bankSelected: "",
   }),
   actions: {
-    getInit() {
+    async getInit() {
       this.userData = storageUtil.getLocalStorageData("userAuthInfo");
+      this.listBankData = await this.fetchBankData();
+      this.listBankData = this.listBankData.map((item) => {
+        return {
+          ...item,
+          name: `${item.name} - ${item.shortName}`,
+        };
+      });
     },
 
     async updateUserInformation(userData) {
       try {
+        const isHaveBankSelect = userData.bank_name?.id ? true : false;
+
+        if (isHaveBankSelect) {
+          userData.bank_name = userData.bank_name.shortName;
+          userData.is_updated_bank_data = true;
+        }
+
         Loading.show();
         let imageUrl = userData.image_url;
 
@@ -83,6 +101,48 @@ export const useSettingStore = defineStore("seller-settings", {
         storageUtil.setLocalStorageData("userAuthInfo", users[0]);
       } catch (err) {
         console.error("Internal Server Error getUserAccountData(): ", err);
+      }
+    },
+
+    async fetchBankData() {
+      try {
+        const axiosInstance = axios.create();
+        const url = "https://api.vietqr.io/v2/banks";
+
+        const result = await axiosInstance.get(url);
+
+        if (result) {
+          return result.data.data;
+        } else {
+          console.error("Caught error when fetching bank data!");
+        }
+      } catch (err) {
+        console.error("Internal Server Error: ", err);
+      }
+    },
+
+    /* FUNCTIONAL */
+    /* Function for handle filter bank in input */
+    filterFn(val, update) {
+      try {
+        if (val === "") {
+          update(() => {
+            this.filterBanks = this.listBankData;
+          });
+
+          return;
+        }
+
+        update(() => {
+          const needed = val.toLowerCase().split(" ");
+          this.filterBanks = this.listBankData.filter((bank) => {
+            return needed.every((k) => {
+              return Object.values(bank).join(" ").toLowerCase().includes(k);
+            });
+          });
+        });
+      } catch (err) {
+        console.error("Internal Server Error: ", err);
       }
     },
   },
