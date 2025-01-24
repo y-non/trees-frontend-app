@@ -73,7 +73,7 @@ export const userDetailStore = defineStore("detail", {
         const storeUtils = useUtilsStore();
 
         const checkItemExist = storeUtils.listCart.find(
-          (item) => item.product_id === itemAdd.id
+          (item) => item.product_id.id === itemAdd.id
         );
 
         if (checkItemExist) {

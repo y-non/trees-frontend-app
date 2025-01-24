@@ -159,7 +159,7 @@ onMounted(async () => {
                     <q-btn
                       color="green-8"
                       icon="eva-shopping-cart-outline"
-                      label="Mua hàng"
+                      label="Thêm giỏ hàng"
                       class="full-width"
                       @click="
                         storeDetails.clickAddToCard(storeDetails.objectData)
