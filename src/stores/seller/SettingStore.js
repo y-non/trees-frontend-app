@@ -27,11 +27,6 @@ export const useSettingStore = defineStore("seller-settings", {
       try {
         const isHaveBankSelect = userData.bank_name?.id ? true : false;
 
-        if (isHaveBankSelect) {
-          userData.bank_name = userData.bank_name.shortName;
-          userData.is_updated_bank_data = true;
-        }
-
         Loading.show();
         let imageUrl = userData.image_url;
 
@@ -54,16 +49,25 @@ export const useSettingStore = defineStore("seller-settings", {
           imageUrl = publicUrlData.publicUrl;
         }
 
+        let payload = {
+          display_name: userData.display_name,
+          phone: userData.phone,
+          address: userData.address,
+          description: userData.description,
+          image_url: imageUrl,
+        };
+
+        if (isHaveBankSelect) {
+          payload.bank_name = userData.bank_name.shortName;
+          payload.is_updated_bank_data = true;
+          payload.account_name = userData.account_name;
+          payload.account_number = userData.account_number;
+        }
+
         // Update user information in the database
         const { error: updateError } = await supabase
           .from("users")
-          .update({
-            display_name: userData.display_name,
-            phone: userData.phone,
-            address: userData.address,
-            description: userData.description,
-            image_url: imageUrl, // Update avatar URL
-          })
+          .update(payload)
           .eq("id", userData.id);
 
         if (updateError) throw updateError;
@@ -78,6 +82,8 @@ export const useSettingStore = defineStore("seller-settings", {
             position: "top",
             timeout: 1000,
           });
+
+          await this.resetData();
 
           // storageUtil.setLocalStorageData("userAuthInfo", userData);
         }
@@ -144,6 +150,15 @@ export const useSettingStore = defineStore("seller-settings", {
       } catch (err) {
         console.error("Internal Server Error: ", err);
       }
+    },
+
+    async resetData() {
+      try {
+        const userData = storageUtil.getLocalStorageData("userAuthInfo");
+        await this.getUserAccountData(userData.user_id);
+
+        await this.getInit();
+      } catch (err) {}
     },
   },
 });
