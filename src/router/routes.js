@@ -9,7 +9,7 @@ import DetailPageVue from "src/pages/DetailPage.vue";
 import CartPageVue from "src/pages/CartPage.vue";
 import CheckoutPageVue from "src/pages/CheckoutPage.vue";
 import SettingUserPageVue from "src/pages/seller/SettingUserPage.vue";
-import MomoQrVue from "src/pages/MomoQr.vue";
+import PaymentPage from "src/pages/PaymentPage.vue";
 
 const routes = [
   {
@@ -77,9 +77,9 @@ const routes = [
       },
 
       {
-        path: "/momo-qr",
-        component: MomoQrVue,
-        name: "MomoQrVue",
+        path: "/payment",
+        component: PaymentPage,
+        name: "PaymentPage",
       },
     ],
   },

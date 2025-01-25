@@ -149,6 +149,7 @@ onMounted(() => {
         color="primary"
         class="full-width"
         label="Thanh Toán Ngay"
+        to="/payment"
       />
     </div>
   </q-page>

@@ -28,7 +28,7 @@ export const useCartStore = defineStore("cart", {
 
         let { data: carts, error } = await supabase
           .from("carts")
-          .select("*, product_id(*, category(*))")
+          .select("*, product_id(*, category(*), user_id(*))")
           .eq("user_id", userData.id);
 
         if (error) {
@@ -92,18 +92,36 @@ export const useCartStore = defineStore("cart", {
 
     clickToOrder(listOrder) {
       try {
-        // Convert the object to a JSON string
-        const jsonString = JSON.stringify(listOrder);
+        //check if order including the item of users still haven't add payment method yet
+        let isAddPayment = true;
+        listOrder.forEach((item) => {
+          if (!item.product_id.user_id.is_updated_bank_data) {
+            isAddPayment = false;
+          }
+        });
 
-        // Convert the string to a Uint8Array (array of bytes)
-        const stringData = new TextEncoder().encode(jsonString);
+        if (isAddPayment) {
+          // Convert the object to a JSON string
+          const jsonString = JSON.stringify(listOrder);
 
-        // Encode to Base64
-        const base64 = base64Utils.bytesToBase64(stringData);
+          // Convert the string to a Uint8Array (array of bytes)
+          const stringData = new TextEncoder().encode(jsonString);
 
-        storageUtil.setLocalStorageData("listOrders", base64);
+          // Encode to Base64
+          const base64 = base64Utils.bytesToBase64(stringData);
 
-        this.router.push(`/checkout`);
+          storageUtil.setLocalStorageData("listOrders", base64);
+
+          this.router.push(`/checkout`);
+        } else {
+          Dialog.create({
+            title: "Thông báo",
+            message:
+              "Có người bán chưa thêm thông tin thanh toán, Vui lòng chỉ chọn những sản phẩm đã được kiểm duyệt!",
+            ok: true,
+            cancel: false,
+          });
+        }
       } catch (err) {
         console.error("Internal Server Error: ", err);
       }

@@ -86,7 +86,13 @@ const columns = [
       style="min-height: 60vh"
       :filter="storeCart.filterProduct"
     >
-      <template v-slot:top-right><q-btn color="green-9" icon="eva-shopping-cart-outline" label="Đặt hàng" @click="storeCart.clickToOrder(storeCart.tableMultiSelect)" /></template>
+      <template v-slot:top-right
+        ><q-btn
+          color="green-9"
+          icon="eva-shopping-cart-outline"
+          label="Đặt hàng"
+          @click="storeCart.clickToOrder(storeCart.tableMultiSelect)"
+      /></template>
 
       <template v-slot:body="props">
         <tr style="width: 100%" :props="props" :key="`m_${props.row.index}`">
@@ -104,7 +110,25 @@ const columns = [
             <!-- <img src="props.row.product_id.image_url" alt="" />  -->
           </td>
 
-          <td>{{ props.row.product_id.name }}</td>
+          <td>
+            <p class="text-subtitle1">{{ props.row.product_id.name }}</p>
+            <span class="text-bold">{{
+              props.row.product_id.user_id.display_name
+            }}</span>
+
+            <div
+              v-if="props.row.product_id.user_id.is_updated_bank_data"
+              class="text-green"
+            >
+              <q-icon name="eva-checkmark-circle-2-outline" />
+              đã có phương thức thanh toán
+            </div>
+
+            <div v-else class="text-red">
+              <q-icon name="eva-close-circle-outline" />
+              chưa có phương thức thanh toán
+            </div>
+          </td>
 
           <td>{{ Utils.formatMoney(props.row.product_id.price) }}</td>
 
