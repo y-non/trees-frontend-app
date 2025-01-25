@@ -65,7 +65,7 @@ const routes = [
       },
 
       {
-        path: "/checkout/:state",
+        path: "/checkout",
         component: CheckoutPageVue,
         name: "CheckoutPageVue",
       },

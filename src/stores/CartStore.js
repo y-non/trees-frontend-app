@@ -101,7 +101,9 @@ export const useCartStore = defineStore("cart", {
         // Encode to Base64
         const base64 = base64Utils.bytesToBase64(stringData);
 
-        this.router.push(`/checkout/${base64}`);
+        storageUtil.setLocalStorageData("listOrders", base64);
+
+        this.router.push(`/checkout`);
       } catch (err) {
         console.error("Internal Server Error: ", err);
       }

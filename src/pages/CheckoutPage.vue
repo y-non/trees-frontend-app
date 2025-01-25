@@ -20,7 +20,9 @@ onMounted(() => {
     userData.value = storageUtil.getLocalStorageData("userAuthInfo");
 
     // Get value from URL
-    const routerStateParams = router.currentRoute.value.params.state;
+    // const routerStateParams = router.currentRoute.value.params.state;
+
+    const routerStateParams = storageUtil.getLocalStorageData("listOrders");
 
     // Decode the URL to get checkout data
     const encodedData = base64Utils.base64ToBytes(routerStateParams);
@@ -28,6 +30,7 @@ onMounted(() => {
 
     // Parse the decoded data to JSON
     listOrder.value = JSON.parse(decodedData);
+    console.log(listOrder.value);
 
     // Calculate total amount
     total.value = listOrder.value.reduce((acc, item) => {
