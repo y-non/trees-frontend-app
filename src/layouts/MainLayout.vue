@@ -51,7 +51,9 @@ onBeforeMount(() => {});
           <li>Trang chủ</li>
           <li>Giới thiệu</li>
           <li>Sản phẩm</li>
-          <li>Kiểm tra đơn hàng</li>
+          <router-link to="/order/checking">
+            <li>Kiểm tra đơn hàng</li>
+          </router-link>
           <li>Liên hệ</li>
         </ul>
       </div>
@@ -273,6 +275,7 @@ onBeforeMount(() => {});
   cursor: pointer;
   display: inline-block;
   position: relative;
+  color: #000;
 
   &::after {
     content: "";

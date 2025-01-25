@@ -10,6 +10,7 @@ import CartPageVue from "src/pages/CartPage.vue";
 import CheckoutPageVue from "src/pages/CheckoutPage.vue";
 import SettingUserPageVue from "src/pages/seller/SettingUserPage.vue";
 import PaymentPage from "src/pages/PaymentPage.vue";
+import CheckingOrderVue from "src/pages/CheckingOrder.vue";
 
 const routes = [
   {
@@ -80,6 +81,12 @@ const routes = [
         path: "/payment",
         component: PaymentPage,
         name: "PaymentPage",
+      },
+
+      {
+        path: "/order/checking",
+        component: CheckingOrderVue,
+        name: "CheckingOrderVue",
       },
     ],
   },
