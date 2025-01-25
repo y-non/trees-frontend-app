@@ -6,10 +6,10 @@ export const useCheckoutStore = defineStore("checkout", {
     orderObject: {},
   }),
   actions: {
-    clickOrder(listOrder, orderData) {
+    clickOrder(listOrder, userOrderData) {
       try {
         const sellerData = listOrder[0].product_id.user_id;
-        storageUtil.setLocalStorageData("orderData", orderData);
+        storageUtil.setLocalStorageData("userOrderData", userOrderData);
         storageUtil.setLocalStorageData("sellerData", sellerData);
 
         this.router.push("/payment");

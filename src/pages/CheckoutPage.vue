@@ -118,7 +118,7 @@ onMounted(() => {
     <!-- Notes and Summary -->
     <q-card class="q-ma-md shadow-2">
       <q-card-section>
-        <q-input filled v-model="userNote" label="Lưu ý cho Người bán..." />
+        <q-input filled v-model="storeCheckout.orderObject.note" label="Lưu ý cho Người bán..." />
       </q-card-section>
 
       <q-separator />
