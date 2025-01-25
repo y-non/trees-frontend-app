@@ -1,9 +1,19 @@
 <script setup>
+import { storageUtil } from "src/utils/storageUtil";
 import { onMounted, ref } from "vue";
 
-const qrCodeCanvas = ref(null);
+const image = ref("");
 
-onMounted(() => {});
+onMounted(() => {
+  const orderData = storageUtil.getLocalStorageData("orderData");
+  const sellerData = storageUtil.getLocalStorageData("sellerData");
+
+  image.value = `https://img.vietqr.io/image/${sellerData.bank_name}-${
+    sellerData.account_number
+  }-print.jpg?amount=${orderData.total}&addInfo=${encodeURIComponent(
+    ""
+  )}&accountName=${encodeURIComponent(sellerData.account_name)}`;
+});
 </script>
 
 <template>
@@ -15,12 +25,7 @@ onMounted(() => {});
         </div>
       </q-card-section>
       <q-card-section class="text-center">
-        <q-img
-          src="https://placeimg.com/500/300/nature"
-          :ratio="16 / 9"
-          spinner-color="primary"
-          spinner-size="82px"
-        />
+        <q-img :src="image" spinner-color="primary" spinner-size="82px" />
       </q-card-section>
       <q-card-section class="text-center q-mt-sm">
         <q-btn label="Trở về trang đặt hàng" color="primary" to="/checkout" />
@@ -32,6 +37,6 @@ onMounted(() => {});
 <style scoped>
 /* Optional styling */
 .q-card {
-  max-width: 300px;
+  max-width: 50vw;
 }
 </style>

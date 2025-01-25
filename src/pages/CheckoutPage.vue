@@ -12,12 +12,11 @@ const insuranceSelected = ref(false);
 const userNote = ref("");
 const router = useRouter();
 const total = ref(0);
-const userData = ref("");
 
 onMounted(() => {
   try {
     //get user data from local
-    userData.value = storageUtil.getLocalStorageData("userAuthInfo");
+    storeCheckout.orderObject = storageUtil.getLocalStorageData("userAuthInfo");
 
     // Get value from URL
     // const routerStateParams = router.currentRoute.value.params.state;
@@ -30,12 +29,13 @@ onMounted(() => {
 
     // Parse the decoded data to JSON
     listOrder.value = JSON.parse(decodedData);
-    console.log(listOrder.value);
 
     // Calculate total amount
-    total.value = listOrder.value.reduce((acc, item) => {
+    total.value = +listOrder.value.reduce((acc, item) => {
       return acc + item.product_id.price * item.quantity;
     }, 0);
+
+    storeCheckout.orderObject.total = total.value + 19400;
   } catch (err) {
     console.error("Error decoding checkout data:", err);
 
@@ -60,10 +60,11 @@ onMounted(() => {
           <div class="col q-pl-md">
             <div class="text-subtitle2">Địa Chỉ Nhận Hàng</div>
             <div class="text-body2">
-              {{ userData.display_name }} (+84) {{ userData.phone }}
+              {{ storeCheckout.orderObject.display_name }} (+84)
+              {{ storeCheckout.orderObject.phone }}
             </div>
             <div class="text-caption text-grey">
-              {{ userData.address }}
+              {{ storeCheckout.orderObject.address }}
             </div>
           </div>
           <q-btn flat color="primary" label="Thay Đổi" size="sm" />
@@ -149,7 +150,7 @@ onMounted(() => {
         color="primary"
         class="full-width"
         label="Thanh Toán Ngay"
-        to="/payment"
+        @click="storeCheckout.clickOrder(listOrder, storeCheckout.orderObject)"
       />
     </div>
   </q-page>
