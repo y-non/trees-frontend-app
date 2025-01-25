@@ -7,6 +7,7 @@ export const usePaymentStore = defineStore("payment", {
   state: () => ({
     orderCode: "",
     orderData: {},
+    isShowDialog: false,
   }),
   actions: {
     async getInit() {},
@@ -28,14 +29,13 @@ export const usePaymentStore = defineStore("payment", {
 
         storageUtil.setLocalStorageData("orderCode", this.orderCode);
 
-        this.router.push("/payment-success");
-
         Notify.create({
           type: "positive",
           message: "Tạo đơn hàng thành công!",
           position: "top-right",
           timeout: 2000,
         });
+        this.isShowDialog = true;
 
         Loading.hide();
       } catch (err) {
