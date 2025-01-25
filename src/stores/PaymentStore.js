@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
 import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
+import { useUtilsStore } from "./UtilsStore";
 
 export const usePaymentStore = defineStore("payment", {
   state: () => ({
@@ -13,10 +14,9 @@ export const usePaymentStore = defineStore("payment", {
     async getInit() {},
     async createOrder(orderData) {
       try {
+        const storeUtils = useUtilsStore();
         Loading.show();
         const payload = orderData;
-
-        console.log(payload);
 
         const { data, error } = await supabase
           .from("orders")
@@ -35,6 +35,18 @@ export const usePaymentStore = defineStore("payment", {
           position: "top-right",
           timeout: 2000,
         });
+
+        await Promise.all(
+          orderData.products.map(async (cartItem) => {
+            const { error } = await supabase
+              .from("carts")
+              .delete()
+              .eq("id", cartItem.id);
+          })
+        );
+
+        storeUtils.listCart = await storeUtils.getListCart();
+
         this.isShowDialog = true;
 
         Loading.hide();
