@@ -5,13 +5,17 @@ import { Utils } from "src/utils/Utils";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useCheckoutStore } from "src/stores/CheckoutStore";
+import { computed } from "vue";
 
 const storeCheckout = useCheckoutStore();
 const listOrder = ref([]);
 const insuranceSelected = ref(false);
-const userNote = ref("");
 const router = useRouter();
 const total = ref(0);
+
+// Calculate the final total, including the fixed shipping cost
+const shippingCost = 19400;
+const finalTotal = computed(() => total.value + shippingCost);
 
 onMounted(() => {
   try {
@@ -73,52 +77,54 @@ onMounted(() => {
     </q-card>
 
     <!-- Product Details -->
-    <q-card
-      v-for="(item, index) in listOrder"
-      :key="index"
-      class="q-ma-md shadow-2"
-    >
-      <q-card-section>
-        <div class="row items-start">
-          <q-img
-            :src="item.product_id.image_url"
-            class="q-mr-md"
-            style="width: 80px; height: 80px"
-            contain
-          />
-          <div class="col">
-            <div class="text-subtitle2">{{ item.product_id.name }}</div>
-            <div class="text-caption text-grey">
-              Loại: {{ item.product_id.category.name }}
-              <p>Số lượng: {{ item.quantity }}</p>
+    <div v-for="(item) in listOrder" :key="item.id">
+      <q-card class="q-ma-md shadow-2">
+        <q-card-section>
+          <div class="row items-start">
+            <q-img
+              :src="item.product_id.image_url"
+              class="q-mr-md"
+              style="width: 80px; height: 80px"
+              contain
+            />
+            <div class="col">
+              <div class="text-subtitle2">{{ item.product_id.name }}</div>
+              <div class="text-caption text-grey">
+                Loại: {{ item.product_id.category.name }}
+                <p>Số lượng: {{ item.quantity }}</p>
+              </div>
+            </div>
+            <div class="text-body2">
+              ₫{{ Utils.formatMoney(item.product_id.price) }}
             </div>
           </div>
-          <div class="text-body2">
-            ₫{{ Utils.formatMoney(item.product_id.price) }}
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section>
+          <q-checkbox
+            label="Bảo hiểm đơn hàng"
+            size="sm"
+            color="primary"
+            v-model="insuranceSelected"
+          />
+          <div class="text-caption text-grey q-mt-xs">
+            Bảo vệ đơn hàng của bạn trước những thiệt hại do sự cố, tiếp xúc với
+            chất lỏng và mất cắp.
           </div>
-        </div>
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section>
-        <q-checkbox
-          label="Bảo hiểm đơn hàng"
-          size="sm"
-          color="primary"
-          v-model="insuranceSelected"
-        />
-        <div class="text-caption text-grey q-mt-xs">
-          Bảo vệ đơn hàng của bạn trước những thiệt hại do sự cố, tiếp xúc với
-          chất lỏng và mất cắp.
-        </div>
-      </q-card-section>
-    </q-card>
+        </q-card-section>
+      </q-card>
+    </div>
 
     <!-- Notes and Summary -->
     <q-card class="q-ma-md shadow-2">
       <q-card-section>
-        <q-input filled v-model="storeCheckout.orderObject.note" label="Lưu ý cho Người bán..." />
+        <q-input
+          filled
+          v-model="storeCheckout.orderObject.note"
+          label="Lưu ý cho Người bán..."
+        />
       </q-card-section>
 
       <q-separator />
@@ -137,7 +143,7 @@ onMounted(() => {
         <div class="row items-center justify-between">
           <div class="text-h6">Tổng số tiền:</div>
           <div class="text-h6 text-primary">
-            ₫{{ Utils.formatMoney((total += 19400)) }}
+            ₫{{ Utils.formatMoney(finalTotal) }}
           </div>
         </div>
       </q-card-section>

@@ -60,7 +60,7 @@ onBeforeMount(() => {});
 
       <div class="flex q-gutter-lg" style="align-items: center">
         <q-input
-          v-model="text"
+          v-model="storeUtils.searchFilter"
           type="text"
           placeholder="Tìm kiếm..."
           rounded

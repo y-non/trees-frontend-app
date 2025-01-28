@@ -5,6 +5,7 @@ import { supabase } from "src/utils/superbase";
 
 export const useUtilsStore = defineStore("utils", {
   state: () => ({
+    searchFilter: "",
     listCart: [],
   }),
   actions: {
