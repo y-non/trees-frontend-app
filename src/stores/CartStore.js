@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Dialog } from "quasar";
+import { Dialog, Notify } from "quasar";
 import { storageUtil } from "src/utils/storageUtil";
 import { supabase } from "src/utils/superbase";
 import { useUtilsStore } from "./UtilsStore";
@@ -92,34 +92,43 @@ export const useCartStore = defineStore("cart", {
 
     clickToOrder(listOrder) {
       try {
-        //check if order including the item of users still haven't add payment method yet
-        let isAddPayment = true;
-        listOrder.forEach((item) => {
-          if (!item.product_id.user_id.is_updated_bank_data) {
-            isAddPayment = false;
+        if (listOrder?.length) {
+          //check if order including the item of users still haven't add payment method yet
+          let isAddPayment = true;
+          listOrder.forEach((item) => {
+            if (!item.product_id.user_id.is_updated_bank_data) {
+              isAddPayment = false;
+            }
+          });
+
+          if (isAddPayment) {
+            // Convert the object to a JSON string
+            const jsonString = JSON.stringify(listOrder);
+
+            // Convert the string to a Uint8Array (array of bytes)
+            const stringData = new TextEncoder().encode(jsonString);
+
+            // Encode to Base64
+            const base64 = base64Utils.bytesToBase64(stringData);
+
+            storageUtil.setLocalStorageData("listOrders", base64);
+
+            this.router.push(`/checkout`);
+          } else {
+            Dialog.create({
+              title: "Thông báo",
+              message:
+                "Có người bán chưa thêm thông tin thanh toán, Vui lòng chỉ chọn những sản phẩm đã được kiểm duyệt!",
+              ok: true,
+              cancel: false,
+            });
           }
-        });
-
-        if (isAddPayment) {
-          // Convert the object to a JSON string
-          const jsonString = JSON.stringify(listOrder);
-
-          // Convert the string to a Uint8Array (array of bytes)
-          const stringData = new TextEncoder().encode(jsonString);
-
-          // Encode to Base64
-          const base64 = base64Utils.bytesToBase64(stringData);
-
-          storageUtil.setLocalStorageData("listOrders", base64);
-
-          this.router.push(`/checkout`);
         } else {
-          Dialog.create({
-            title: "Thông báo",
-            message:
-              "Có người bán chưa thêm thông tin thanh toán, Vui lòng chỉ chọn những sản phẩm đã được kiểm duyệt!",
-            ok: true,
-            cancel: false,
+          Notify.create({
+            type: "negative",
+            message: "Vui lòng chọn sản phẩm để đặt hàng!",
+            position: "top-right",
+            timeout: 2000,
           });
         }
       } catch (err) {
