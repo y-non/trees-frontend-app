@@ -70,39 +70,50 @@ export const userDetailStore = defineStore("detail", {
 
     async clickAddToCard(itemAdd) {
       try {
-        const storeUtils = useUtilsStore();
+        const isLogin = storageUtil.getLocalStorageData("isLogin") || false;
 
-        const checkItemExist = storeUtils.listCart.find(
-          (item) => item.product_id.id === itemAdd.id
-        );
+        if (isLogin) {
+          const storeUtils = useUtilsStore();
 
-        if (checkItemExist) {
-          checkItemExist.numberAdd = itemAdd.number;
+          const checkItemExist = storeUtils.listCart.find(
+            (item) => item.product_id.id === itemAdd.id
+          );
 
-          const result = await this.updateDataCart(checkItemExist);
+          if (checkItemExist) {
+            checkItemExist.numberAdd = itemAdd.number;
 
-          if (result) {
-            Notify.create({
-              message: "Thêm vào giỏ hàng thành công!",
-              type: "positive",
-              timeout: 2000,
-              position: "top-right",
-            });
+            const result = await this.updateDataCart(checkItemExist);
+
+            if (result) {
+              Notify.create({
+                message: "Thêm vào giỏ hàng thành công!",
+                type: "positive",
+                timeout: 2000,
+                position: "top-right",
+              });
+            }
+          } else {
+            const result = await this.addToCart(itemAdd);
+
+            if (result) {
+              Notify.create({
+                message: "Thêm vào giỏ hàng thành công!",
+                type: "positive",
+                timeout: 2000,
+                position: "top-right",
+              });
+            }
           }
+
+          storeUtils.listCart = await storeUtils.getListCart();
         } else {
-          const result = await this.addToCart(itemAdd);
-
-          if (result) {
-            Notify.create({
-              message: "Thêm vào giỏ hàng thành công!",
-              type: "positive",
-              timeout: 2000,
-              position: "top-right",
-            });
-          }
+          Notify.create({
+            type: "negative",
+            message: "Vui lòng đăng nhập để thực hiện tính năng này!",
+            position: "top-right",
+            timeout: 2000,
+          });
         }
-
-        storeUtils.listCart = await storeUtils.getListCart();
       } catch (err) {
         console.error("Internal Server Error: ");
       }
